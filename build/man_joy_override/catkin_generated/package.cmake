@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "man_joy_override")
+set(man_joy_override_MAINTAINER "abuchan <abuchan@todo.todo>")
+set(man_joy_override_DEPRECATED "")
+set(man_joy_override_VERSION "0.0.0")
+set(man_joy_override_BUILD_DEPENDS "geometry_msgs" "rospy" "sensor_msgs" "std_msgs")
+set(man_joy_override_RUN_DEPENDS "geometry_msgs" "rospy" "sensor_msgs" "std_msgs")
+set(man_joy_override_BUILDTOOL_DEPENDS "catkin")

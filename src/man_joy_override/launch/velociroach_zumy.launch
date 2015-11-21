@@ -1,0 +1,20 @@
+<launch>
+  <node pkg="man_joy_override" name="roach_bridge" type="roach_bridge.py" />
+  
+  <node pkg="joy" name="joystick" type="joy_node" />
+  <node pkg="man_joy_override" name="man_joy" type="man_joy_override.py">
+    <remap from="robot0/cmd_vel_in" to="joy1/robot0/cmd_vel" />
+    <remap from="robot1/cmd_vel_in" to="joy1/robot1/cmd_vel" />
+    <remap from="robot2/cmd_vel_in" to="joy2/robot2/cmd_vel" />
+  </node>
+
+  <group ns="joy1"> 
+  <node pkg="joy" name="joystick1" type="joy_node">
+    <remap from="joy" to="joy1" />
+    <param name="dev" value="/dev/input/js1" />
+  </node>
+  <node pkg="man_joy_override" name="man_joy1" type="man_joy_override.py">
+    <remap from="joy" to="joy1" />
+  </node>
+  </group>
+</launch>

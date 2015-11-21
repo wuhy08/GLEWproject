@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "life_cam")
+set(life_cam_MAINTAINER "ee106a-cn <ee106a-cn@todo.todo>")
+set(life_cam_DEPRECATED "")
+set(life_cam_VERSION "0.0.0")
+set(life_cam_BUILD_DEPENDS "rospy" "sensor_msgs")
+set(life_cam_RUN_DEPENDS "rospy" "sensor_msgs")
+set(life_cam_BUILDTOOL_DEPENDS "catkin")

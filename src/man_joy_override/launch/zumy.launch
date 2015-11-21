@@ -1,0 +1,11 @@
+<launch>
+
+  <node pkg="joy" name="joystick" type="joy_node" />
+
+  <node pkg="man_joy_override" name="man_joy" type="man_joy_override.py" output="screen"/>
+
+  <node pkg="rqt_gui" name="zumy_rqt" type="rqt_gui" respawn="false" output="screen" args="--perspective-file $(find man_joy_override)/launch/zumy.perspective"/>
+
+  <include file="$(find odroid_machine)/launch/auto_connect.launch" />
+
+</launch>

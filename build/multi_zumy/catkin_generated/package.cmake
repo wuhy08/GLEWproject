@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "multi_zumy")
+set(multi_zumy_MAINTAINER "ee106a-ap <ee106a-ap@todo.todo>")
+set(multi_zumy_DEPRECATED "")
+set(multi_zumy_VERSION "0.0.0")
+set(multi_zumy_BUILD_DEPENDS "roscpp" "rospy" "tf")
+set(multi_zumy_RUN_DEPENDS "roscpp" "rospy" "tf")
+set(multi_zumy_BUILDTOOL_DEPENDS "catkin")
