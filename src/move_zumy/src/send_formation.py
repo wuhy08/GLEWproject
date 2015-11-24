@@ -152,11 +152,13 @@ if __name__== '__main__':
 		sys.exit()
 	zumy_ID = sys.argv[1:]
 	zumy_monitor = {}
+	goal_pos_for_srv = {}
 	for curr_zumy_ID in zumy_ID:
 		zumy_monitor[curr_zumy_ID] = ZumyPosMonitor(curr_zumy_ID)
 
 	predef_formation_command = ['h', 's', 't', 'd', 'v']
 	while True:
+		final_dest_counter = 0
 		formation_command = raw_input("Please input formation command:")
 		if formation_command in predef_formation_command:
 			final_destination = translate_cmd_2_coord(formation_command)
@@ -166,7 +168,27 @@ if __name__== '__main__':
 				latest_zumy_pos[ii] = np.array([zumy_monitor[curr_zumy_ID].position.x,
 												zumy_monitor[curr_zumy_ID].position.y,
 												zumy_monitor[curr_zumy_ID].position.theta])
+				ii = ii + 1
 			new_final_destination = find_optimal_path(latest_zumy_pos, final_destination)
+			ii = 0
+			for curr_zumy_ID in zumy_ID:
+				goal_pos_for_srv[curr_zumy_ID] = Pose2D()
+				goal_pos_for_srv[curr_zumy_ID].x = new_final_destination[ii, 0]
+				goal_pos_for_srv[curr_zumy_ID].y = new_final_destination[ii, 1]
+				goal_pos_for_srv[curr_zumy_ID].theta = new_final_destination[ii, 2]
+				ii = ii + 1
+			while final_dest_counter<5:
+				zumy_reach_num = 0
+				for curr_zumy_ID in zumy_ID:
+					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID])
+					if is_goal_reached:
+						zumy_reach_num = zumy_reach_num + 1
+				if zumy_reach_num == 4:
+					final_dest_counter = final_dest_counter + 1
+				if not zumy_reach_num == 4:
+					final_dest_counter = 0
+
+
 
 
 		if not formation_command in predef_formation_command:

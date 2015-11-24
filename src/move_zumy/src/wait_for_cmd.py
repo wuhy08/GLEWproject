@@ -23,7 +23,7 @@ class MoveZumy:
 		self.rate = rospy.Rate(10)
 		self.goal = self.position
 		self.goal_flag = True
-		self.goalCounter = 0
+		#self.goalCounter = 0
 		#moveEnable will enable or disable the movement of Zumy
 		self.moveEnable = True
 		#The permission will be published by a topic that is responsible for coordinating zumys
@@ -52,8 +52,8 @@ class MoveZumy:
 	def move(self, request):
 
 		self.goal = request.goal
-		self.goal_flag = False
-		self.goalCounter = 0
+		#self.goal_flag = False
+		#self.goalCounter = 0
 		
 		cmd = Twist()	
 		cmd.linear.y = 0
@@ -63,33 +63,33 @@ class MoveZumy:
 
 		#Creating a new current state based on the information from Haoyu's code		
 		#Plugging the information from Haoyu's code into Vijay's getCmdVel function to calculate v_x and omega_z
-		while self.goalCounter<5:
-			(vel, self.goal_flag) = get_vel.getCmdVel(self.position, self.goal)
+		#while self.goalCounter<5:
+		(vel, self.goal_flag) = get_vel.getCmdVel(self.position, self.goal)
 
-		#Creating the ability to publish to the zumy
+	#Creating the ability to publish to the zumy
 
-		#Creating the message type to publish to the zumy (information from vel)
+	#Creating the message type to publish to the zumy (information from vel)
 
-			if (not self.goal_flag) and self.moveEnable:
-				cmd.angular.z = vel['ang_z']
-				cmd.linear.x = vel['lin_x']
-				self.goalCounter = 0
-			if self.goal_flag and self.moveEnable:
-				cmd.angular.z = 0
-				cmd.linear.x = 0
-				self.goalCounter = self.goalCounter + 1
-			if not self.moveEnable:
-				cmd.angular.z = 0
-				cmd.linear.x = 0
-				self.goalCounter = 0				
+		if (not self.goal_flag) and self.moveEnable:
+			cmd.angular.z = vel['ang_z']
+			cmd.linear.x = vel['lin_x']
+			#self.goalCounter = 0
+		if self.goal_flag and self.moveEnable:
+			cmd.angular.z = 0
+			cmd.linear.x = 0
+			#self.goalCounter = self.goalCounter + 1
+		if not self.moveEnable:
+			cmd.angular.z = 0
+			cmd.linear.x = 0
+			#self.goalCounter = 0				
 
-			#Publish new velocity information to the zumy
-			self.vel_pub.publish(cmd)
-			print cmd.linear.x
-			print cmd.angular.z
-			self.rate.sleep()
+		#Publish new velocity information to the zumy
+		self.vel_pub.publish(cmd)
+		print cmd.linear.x
+		print cmd.angular.z
+		self.rate.sleep()
 
-		return True
+		return self.goal_flag
 	
 if __name__=='__main__':
 
