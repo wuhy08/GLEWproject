@@ -7,40 +7,6 @@ from geometry_msgs.msg import Pose2D
 def e_dist(del_x, del_y):
 	return math.sqrt(del_x*del_x + del_y*del_y)
 
-# def plotter(rbt_state, rbt_goal_state):
-# 	plt.cla()
-
-# 	plt.axis([0,2,0,2])
-
-# 	endx = rbt_state['x'] + 0.25 * math.cos(rbt_state['theta'])
-# 	endy = rbt_state['y'] + 0.25 * math.sin(rbt_state['theta'])
-# 	heading_x_pts = [rbt_state['x'], endx]
-# 	heading_y_pts = [rbt_state['y'], endy]
-
-# 	tend_x = rbt_goal_state['x'] + 0.25 * math.cos(rbt_goal_state['theta'])
-# 	tend_y = rbt_goal_state['y'] + 0.25 * math.sin(rbt_goal_state['theta'])
-# 	theading_x_pts = [rbt_goal_state['x'], tend_x]
-# 	theading_y_pts = [rbt_goal_state['y'], tend_y]
-
-# 	rheading = plt.plot(heading_x_pts, heading_y_pts)
-# 	theading = plt.plot(theading_x_pts, theading_y_pts)
-
-
-
-# 	robot=plt.Circle((rbt_state['x'],rbt_state['y']),.05,color='r')
-# 	target=plt.Circle((rbt_goal_state['x'],rbt_goal_state['y']),.05,color='g')
-
-# 	fig = plt.gcf()
-# 	fig.gca().add_artist(robot)
-# 	fig.gca().add_artist(target)
-
-# 	plt.setp(rheading, color ='c')
-# 	plt.setp(theading, color='m')
-
-# 	plt.draw()
-# 	return
-
-
 def getCmdVel(state, goal):
 	del_x_world = goal.x - state.x
 	del_y_world	= goal.y - state.y
@@ -75,33 +41,33 @@ def getCmdVel(state, goal):
 			if abs(del_heading) < config.finalHeadingThresh:
 				lin_x = 0
 				ang_z = 0
-				print 'CASE 1'
+				print 'Reached goal'
 				is_goal_reached = True
 			elif del_heading > 25:
 				lin_x = 0
-				ang_z = config.maxTurnSpd
-				print 'CASE 2'
+				ang_z =  config.finalTurnSpd + (config.maxTurnSpd - config.finalTurnSpd)/155*(del_heading - 25)
+				print 'At goal, angle very +'
 			elif del_heading < -25:
 				lin_x = 0;
-				ang_z = -config.maxTurnSpd
-				print 'CASE 3'
+				ang_z = -config.finalTurnSpd - (config.maxTurnSpd - config.finalTurnSpd)/155*(abs(del_heading) - 25)
+				print 'At goal, angle very -'
 			elif del_heading > 0:
 				lin_x = 0;
 				ang_z = config.finalTurnSpd
-				print 'CASE 4'
+				print 'At goal, angle small + but slowly converging'
 			elif del_heading < 0:
 				lin_x = 0;
 				ang_z = -config.finalTurnSpd
-				print 'CASE 5'
+				print 'At goal, angle small - but slowly converging'
 		else:
 			if del_heading > 0:
 				lin_x = 0
 				ang_z = config.maxTurnSpd
-				print 'CASE 6'
+				print 'Turning + to reach goal'
 			else:
 				lin_x = 0
 				ang_z = -config.maxTurnSpd
-				print 'CASE 7'
+				print 'Turning - to reach goal'
 	else:
 		# Drive and turn at the same time.  Linear velocity scales with the amount of the distance along the robot's x-axis.
 		# Angular velocity scales with the amount of the distance along the robot's y-axis (that we can't cover without turning).
@@ -125,6 +91,40 @@ def getCmdVel(state, goal):
 			ang_z = -config.maxTurnSpd
 
 	return ({'lin_x': lin_x, 'ang_z': ang_z}, is_goal_reached)
+
+# def plotter(rbt_state, rbt_goal_state):
+# 	plt.cla()
+
+# 	plt.axis([0,2,0,2])
+
+# 	endx = rbt_state['x'] + 0.25 * math.cos(rbt_state['theta'])
+# 	endy = rbt_state['y'] + 0.25 * math.sin(rbt_state['theta'])
+# 	heading_x_pts = [rbt_state['x'], endx]
+# 	heading_y_pts = [rbt_state['y'], endy]
+
+# 	tend_x = rbt_goal_state['x'] + 0.25 * math.cos(rbt_goal_state['theta'])
+# 	tend_y = rbt_goal_state['y'] + 0.25 * math.sin(rbt_goal_state['theta'])
+# 	theading_x_pts = [rbt_goal_state['x'], tend_x]
+# 	theading_y_pts = [rbt_goal_state['y'], tend_y]
+
+# 	rheading = plt.plot(heading_x_pts, heading_y_pts)
+# 	theading = plt.plot(theading_x_pts, theading_y_pts)
+
+
+
+# 	robot=plt.Circle((rbt_state['x'],rbt_state['y']),.05,color='r')
+# 	target=plt.Circle((rbt_goal_state['x'],rbt_goal_state['y']),.05,color='g')
+
+# 	fig = plt.gcf()
+# 	fig.gca().add_artist(robot)
+# 	fig.gca().add_artist(target)
+
+# 	plt.setp(rheading, color ='c')
+# 	plt.setp(theading, color='m')
+
+# 	plt.draw()
+# 	return
+
 	
 # def fake_robot_dynamics(state, cmd_vel):
 # 	# this would just be a publish command for the actual Zumy
@@ -139,24 +139,24 @@ def getCmdVel(state, goal):
 
 # 	return {'x':new_x, 'y':new_y, 'theta':new_theta }
 
-if __name__=='__main__':
-	rbt_state = {'x': 0.0, 'y': 0.0, 'theta': 0}
-	print "x ", rbt_state['x']
-	print "y ", rbt_state['y']
-	print "theta ", rbt_state['theta']	
-	cmd_vel = getCmdVel(rbt_state, rbt_goal_state)
+i#f __name__=='__main__':
+#	rbt_state = {'x': 0.0, 'y': 0.0, 'theta': 0}
+#	print "x ", rbt_state['x']
+#	print "y ", rbt_state['y']
+#	print "theta ", rbt_state['theta']	
+#	cmd_vel = getCmdVel(rbt_state, rbt_goal_state)
 
-	plt.ion()
-	plt.show()
-
-	while cmd_vel['lin_x'] != 0.0 or cmd_vel['ang_z'] != 0.0:
+#	plt.ion()
+#	plt.show()
+#
+#	while cmd_vel['lin_x'] != 0.0 or cmd_vel['ang_z'] != 0.0:
 		#print "lin_x ", cmd_vel['lin_x']
 		#print "ang_z ", cmd_vel['ang_z']
-		rbt_state = fake_robot_dynamics(rbt_state, cmd_vel)
-		cmd_vel = getCmdVel(rbt_state, rbt_goal_state)
-		plotter(rbt_state, rbt_goal_state)
-		time.sleep(0.01)
+#		rbt_state = fake_robot_dynamics(rbt_state, cmd_vel)
+#		cmd_vel = getCmdVel(rbt_state, rbt_goal_state)
+#		plotter(rbt_state, rbt_goal_state)
+#		time.sleep(0.01)
 
-	print "x ", rbt_state['x']
-	print "y ", rbt_state['y']
-	print "theta ", rbt_state['theta']	
+#	print "x ", rbt_state['x']
+#	print "y ", rbt_state['y']
+#	print "theta ", rbt_state['theta']	
