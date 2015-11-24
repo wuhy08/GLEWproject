@@ -2,6 +2,12 @@
 
   <arg name="mname1" default="zumy7a"/>
 
+  <arg name="mname2" default="zumy5c"/>
+
+  <arg name="mname3" default="zumy5c"/>
+
+  <arg name="mname4" default="zumy5c"/>
+
   <include file="$(find life_cam)/launch/run_all.launch" />
 
   <node name="rviz1" pkg="rviz" type="rviz"  output="screen"/>
@@ -10,15 +16,22 @@
     <arg name="mname" value="$(arg mname1)" />
   </include>
 
-  <arg name="mname2" default="zumy5c"/>
-
+ 
   <include file="$(find odroid_machine)/launch/remote_zumy.launch">
     <arg name="mname" value="$(arg mname2)" />
   </include>
 
-  <node name="publish_AR_coord" pkg="ar_coord" type="publish_zumy_coord.py" args="0 1 2 3 4 5 6" output="screen"/>
+  <node name="publish_AR_coord" pkg="ar_coord" type="publish_zumy_coord.py" args="0 1 2 3 4 5 6" output="screen" respawn="true"/>
 
-  <node name="wait_for_cmd_7a" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname1)" output="screen"/>
+  <node name="wait_for_cmd_$(arg mname1)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname1)" output="screen" respawn="true"/>
+
+  <node name="wait_for_cmd_$(arg mname2)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname2)" output="screen" respawn="true"/>
+
+  <node name="wait_for_cmd_$(arg mname3)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname3)" output="screen" respawn="true"/>
+
+  <node name="wait_for_cmd_$(arg mname4)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname4)" output="screen" respawn="true"/>
+
+  <node name="send_formation" pkg="move_zumy" type="send_formation.py" args="$(arg mname1) $(arg mname2) $(arg mname3) $(arg mname4)" output="screen" respawn="true"/>
 
 
 

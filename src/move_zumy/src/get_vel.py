@@ -139,7 +139,7 @@ def getCmdVel(state, goal):
 
 # 	return {'x':new_x, 'y':new_y, 'theta':new_theta }
 
-i#f __name__=='__main__':
+#if __name__=='__main__':
 #	rbt_state = {'x': 0.0, 'y': 0.0, 'theta': 0}
 #	print "x ", rbt_state['x']
 #	print "y ", rbt_state['y']
