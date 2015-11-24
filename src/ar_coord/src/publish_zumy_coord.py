@@ -63,7 +63,8 @@ if __name__=='__main__':
         print('Use: publish_zumy_coord.py [ AR tag number ] [ AR tag number ] [ AR tag number ] [ AR tag number ]...')
         sys.exit()
     ar_suffix = 'ar_marker_'
-    ar_tag_names = [ar_suffix+sys.argv for sys.argv in sys.argv[1:]]
+    myargv = rospy.myargv()
+    ar_tag_names = [ar_suffix+myargv for myargv in myargv[1:]]
     ar_origin = ar_tag_names[0]
     ar_x = ar_tag_names[1]
     ar_y = ar_tag_names[2]

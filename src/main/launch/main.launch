@@ -16,14 +16,17 @@
     <arg name="mname" value="$(arg mname1)" />
   </include>
 
- 
+ <!--
   <include file="$(find odroid_machine)/launch/remote_zumy.launch">
     <arg name="mname" value="$(arg mname2)" />
   </include>
+  -->
 
-  <node name="publish_AR_coord" pkg="ar_coord" type="publish_zumy_coord.py" args="0 1 2 3 4 5 6" output="screen" respawn="true"/>
+  <node name="publish_AR_coord" pkg="ar_coord" type="publish_zumy_coord.py" args="0 1 2 4" output="screen" respawn="true"/>
 
   <node name="wait_for_cmd_$(arg mname1)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname1)" output="screen" respawn="true"/>
+
+<!--
 
   <node name="wait_for_cmd_$(arg mname2)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname2)" output="screen" respawn="true"/>
 
@@ -33,7 +36,7 @@
 
   <node name="send_formation" pkg="move_zumy" type="send_formation.py" args="$(arg mname1) $(arg mname2) $(arg mname3) $(arg mname4)" output="screen" respawn="true"/>
 
-
+-->
 
 
 <!--
