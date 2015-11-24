@@ -7,6 +7,7 @@
 SUBDIRS(gtest)
 SUBDIRS(ar_coord)
 SUBDIRS(life_cam)
+SUBDIRS(main)
 SUBDIRS(man_joy_override)
 SUBDIRS(move_zumy)
 SUBDIRS(odroid_machine)

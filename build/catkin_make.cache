@@ -1,2 +1,2 @@
-ar_coord:ar_track_alvar:life_cam:man_joy_override:move_zumy:multi_zumy:odroid_machine:zumy_teleop
+ar_coord:ar_track_alvar:life_cam:main:man_joy_override:move_zumy:multi_zumy:odroid_machine:zumy_teleop
 -DCATKIN_DEVEL_PREFIX=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/devel -DCMAKE_INSTALL_PREFIX=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/install -G Unix Makefiles

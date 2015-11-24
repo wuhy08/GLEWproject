@@ -387,6 +387,12 @@ life_cam_BINARY_DIR:STATIC=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/p
 life_cam_SOURCE_DIR:STATIC=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/src/life_cam
 
 //Value Computed by CMake
+main_BINARY_DIR:STATIC=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/build/main
+
+//Value Computed by CMake
+main_SOURCE_DIR:STATIC=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/src/main
+
+//Value Computed by CMake
 man_joy_override_BINARY_DIR:STATIC=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/build/man_joy_override
 
 //Value Computed by CMake
@@ -463,6 +469,9 @@ rosgraph_DIR:PATH=/opt/ros/indigo/share/rosgraph/cmake
 
 //The directory containing a CMake configuration file for rosgraph_msgs.
 rosgraph_msgs_DIR:PATH=/opt/ros/indigo/share/rosgraph_msgs/cmake
+
+//The directory containing a CMake configuration file for roslaunch.
+roslaunch_DIR:PATH=/opt/ros/indigo/share/roslaunch/cmake
 
 //The directory containing a CMake configuration file for roslib.
 roslib_DIR:PATH=/opt/ros/indigo/share/roslib/cmake
@@ -617,7 +626,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=10
+CMAKE_NUMBER_OF_LOCAL_GENERATORS:INTERNAL=11
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

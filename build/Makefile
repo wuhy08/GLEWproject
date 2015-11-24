@@ -475,6 +475,84 @@ sensor_msgs_generate_messages_py/fast:
 .PHONY : sensor_msgs_generate_messages_py/fast
 
 #=============================================================================
+# Target rules for targets named _run_tests_main
+
+# Build rule for target.
+_run_tests_main: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_main
+.PHONY : _run_tests_main
+
+# fast build rule for target.
+_run_tests_main/fast:
+	$(MAKE) -f main/CMakeFiles/_run_tests_main.dir/build.make main/CMakeFiles/_run_tests_main.dir/build
+.PHONY : _run_tests_main/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_main_roslaunch-check
+
+# Build rule for target.
+_run_tests_main_roslaunch-check: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_main_roslaunch-check
+.PHONY : _run_tests_main_roslaunch-check
+
+# fast build rule for target.
+_run_tests_main_roslaunch-check/fast:
+	$(MAKE) -f main/CMakeFiles/_run_tests_main_roslaunch-check.dir/build.make main/CMakeFiles/_run_tests_main_roslaunch-check.dir/build
+.PHONY : _run_tests_main_roslaunch-check/fast
+
+#=============================================================================
+# Target rules for targets named _run_tests_main_roslaunch-check_launch
+
+# Build rule for target.
+_run_tests_main_roslaunch-check_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 _run_tests_main_roslaunch-check_launch
+.PHONY : _run_tests_main_roslaunch-check_launch
+
+# fast build rule for target.
+_run_tests_main_roslaunch-check_launch/fast:
+	$(MAKE) -f main/CMakeFiles/_run_tests_main_roslaunch-check_launch.dir/build.make main/CMakeFiles/_run_tests_main_roslaunch-check_launch.dir/build
+.PHONY : _run_tests_main_roslaunch-check_launch/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_main
+
+# Build rule for target.
+run_tests_main: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_main
+.PHONY : run_tests_main
+
+# fast build rule for target.
+run_tests_main/fast:
+	$(MAKE) -f main/CMakeFiles/run_tests_main.dir/build.make main/CMakeFiles/run_tests_main.dir/build
+.PHONY : run_tests_main/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_main_roslaunch-check
+
+# Build rule for target.
+run_tests_main_roslaunch-check: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_main_roslaunch-check
+.PHONY : run_tests_main_roslaunch-check
+
+# fast build rule for target.
+run_tests_main_roslaunch-check/fast:
+	$(MAKE) -f main/CMakeFiles/run_tests_main_roslaunch-check.dir/build.make main/CMakeFiles/run_tests_main_roslaunch-check.dir/build
+.PHONY : run_tests_main_roslaunch-check/fast
+
+#=============================================================================
+# Target rules for targets named run_tests_main_roslaunch-check_launch
+
+# Build rule for target.
+run_tests_main_roslaunch-check_launch: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 run_tests_main_roslaunch-check_launch
+.PHONY : run_tests_main_roslaunch-check_launch
+
+# fast build rule for target.
+run_tests_main_roslaunch-check_launch/fast:
+	$(MAKE) -f main/CMakeFiles/run_tests_main_roslaunch-check_launch.dir/build.make main/CMakeFiles/run_tests_main_roslaunch-check_launch.dir/build
+.PHONY : run_tests_main_roslaunch-check_launch/fast
+
+#=============================================================================
 # Target rules for targets named _move_zumy_generate_messages_check_deps_Mov2LocSrv
 
 # Build rule for target.
@@ -1279,6 +1357,12 @@ help:
 	@echo "... sensor_msgs_generate_messages_cpp"
 	@echo "... sensor_msgs_generate_messages_lisp"
 	@echo "... sensor_msgs_generate_messages_py"
+	@echo "... _run_tests_main"
+	@echo "... _run_tests_main_roslaunch-check"
+	@echo "... _run_tests_main_roslaunch-check_launch"
+	@echo "... run_tests_main"
+	@echo "... run_tests_main_roslaunch-check"
+	@echo "... run_tests_main_roslaunch-check_launch"
 	@echo "... _move_zumy_generate_messages_check_deps_Mov2LocSrv"
 	@echo "... move_zumy_gencpp"
 	@echo "... move_zumy_generate_messages"

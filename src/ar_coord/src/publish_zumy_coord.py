@@ -119,10 +119,10 @@ if __name__=='__main__':
                     curr_msg.position.y = curr_coord[1]
                     curr_msg.position.theta = curr_theta
                     zumy_coord_pub[curr_ar_tag].publish(curr_msg)
-                    print curr_ar_tag
-                    print curr_coord
-                    print curr_theta
-                    print latest_t[curr_ar_tag]
+                    # print curr_ar_tag
+                    # print curr_coord
+                    # print curr_theta
+                    # print latest_t[curr_ar_tag]
         rate.sleep()
 
 
