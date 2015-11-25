@@ -14,9 +14,14 @@ listener = None
 
 def get_x_angle(trans,rot):
     g=return_rbt(trans,rot)
+    rot_matrix = g[0:3, 0:3]
+    rot_det = np.linalg.det(rot_matrix)
+    #print rot_det
     x_direction = g[0:3,0]
     #print x_direction
     x_angle = math.atan2(x_direction[1],x_direction[0])
+    #print x_angle
+    #print x_angle*rot_det
     return x_angle
 
 

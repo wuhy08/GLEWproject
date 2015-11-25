@@ -8,6 +8,7 @@ from tf2_msgs.msg import TFMessage
 from std_msgs.msg import Bool
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
+import get_vel_2
 import config
 
 #Creat class MoveZumy, all the publishing, subscribing and Service will happen here
@@ -23,6 +24,7 @@ class MoveZumy:
 		self.rate = rospy.Rate(10)
 		self.goal = self.position
 		self.goal_flag = True
+		self.historyNearGoal = False
 		#self.goalCounter = 0
 		#moveEnable will enable or disable the movement of Zumy
 		self.moveEnable = True
@@ -52,6 +54,7 @@ class MoveZumy:
 	def move(self, request):
 
 		self.goal = request.goal
+		#print self.name
 		#self.goal_flag = False
 		#self.goalCounter = 0
 		
@@ -64,7 +67,8 @@ class MoveZumy:
 		#Creating a new current state based on the information from Haoyu's code		
 		#Plugging the information from Haoyu's code into Vijay's getCmdVel function to calculate v_x and omega_z
 		#while self.goalCounter<5:
-		(vel, self.goal_flag) = get_vel.getCmdVel(self.position, self.goal)
+		(vel, self.goal_flag, self.historyNearGoal) = \
+			get_vel_2.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
 
 	#Creating the ability to publish to the zumy
 
@@ -77,6 +81,7 @@ class MoveZumy:
 		if self.goal_flag and self.moveEnable:
 			cmd.angular.z = 0
 			cmd.linear.x = 0
+			self.historyNearGoal = False
 			#self.goalCounter = self.goalCounter + 1
 		if not self.moveEnable:
 			cmd.angular.z = 0
@@ -85,8 +90,8 @@ class MoveZumy:
 
 		#Publish new velocity information to the zumy
 		self.vel_pub.publish(cmd)
-		print cmd.linear.x
-		print cmd.angular.z
+		#print cmd.linear.x
+		#print cmd.angular.z
 		self.rate.sleep()
 
 		return self.goal_flag
