@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "ar_coord")
-set(ar_coord_MAINTAINER "ee106a-cn <ee106a-cn@todo.todo>")
-set(ar_coord_DEPRECATED "")
-set(ar_coord_VERSION "0.0.0")
-set(ar_coord_BUILD_DEPENDS "message_generation" "rospy" "std_msgs" "geometry_msgs")
-set(ar_coord_RUN_DEPENDS "message_runtime" "rospy" "std_msgs" "geometry_msgs")
-set(ar_coord_BUILDTOOL_DEPENDS "catkin")

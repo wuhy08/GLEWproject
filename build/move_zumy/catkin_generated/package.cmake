@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "move_zumy")
-set(move_zumy_MAINTAINER "ee106a-ap <ee106a-ap@todo.todo>")
-set(move_zumy_DEPRECATED "")
-set(move_zumy_VERSION "0.0.0")
-set(move_zumy_BUILD_DEPENDS "geometry_msgs" "rospy" "std_msgs")
-set(move_zumy_RUN_DEPENDS "geometry_msgs" "rospy" "std_msgs")
-set(move_zumy_BUILDTOOL_DEPENDS "catkin")

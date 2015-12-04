@@ -1,8 +1,0 @@
-prefix=/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/devel
-
-Name: main
-Description: Description of main
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/cc/ee106a/fa15/class/ee106a-cn/ros_workspaces/project/devel/lib 
-Requires: 
