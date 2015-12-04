@@ -11,10 +11,10 @@ import numpy as np
 import assign_dest as ad
 
 class ZumyPosMonitor:
-	def __init__(self, zumy_name):
+	def __init__(self, zumy_name, ar_tag_num):
 		self.name = zumy_name
 		self.position = ZumyCoord().position
-		self.ARTag = config.zumy_ar_pair[self.name]		
+		self.ARTag = 'ar_marker_'+ar_tag_num	
 		rospy.Subscriber('/'+self.ARTag+'/AR_position', ZumyCoord, self.getPos)
 	def getPos(self, msg):
 		self.position = msg.position
@@ -61,14 +61,17 @@ def translate_cmd_2_coord(formation_string):
 if __name__== '__main__':
 	is_goal_reached = True
 	myargv = rospy.myargv()
-	if not len(sys.argv) == 5:
+	if not len(myargv) == 9:
 		print('Wrong Number of Arguments!  We need to have 4 Zumys')
 		sys.exit()
-	zumy_ID = myargv[1:]
+	zumy_ID = myargv[1:5]
+	ar_tag_nums = myargv[5:]
 	zumy_monitor = {}
 	goal_pos_for_srv = {}
+	i=0
 	for curr_zumy_ID in zumy_ID:
-		zumy_monitor[curr_zumy_ID] = ZumyPosMonitor(curr_zumy_ID)
+		zumy_monitor[curr_zumy_ID] = ZumyPosMonitor(curr_zumy_ID, ar_tag_nums[i])
+		i = i + 1
 
 	predef_formation_command = ['h', 's', 't', 'd', 'v']
 	while True:
