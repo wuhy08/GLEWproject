@@ -9,15 +9,14 @@ from std_msgs.msg import Bool
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
 import get_vel_2
-import config
 
 #Creat class MoveZumy, all the publishing, subscribing and Service will happen here
 class MoveZumy:
-	def __init__(self, zumy_name):
+	def __init__(self, zumy_name, ar_tag_num):
 		rospy.init_node('move_zumy'+zumy_name)
 		self.name = zumy_name
 		self.position = ZumyCoord().position
-		self.ARTag = config.zumy_ar_pair[self.name]
+		self.ARTag = 'ar_marker_'+ ar_tag_num
 		#Will subscribe to corresponding AR tag postion 
 		#and once get new message, call getPos to update position
 		rospy.Subscriber('/'+self.ARTag+'/AR_position', ZumyCoord, self.getPos)
@@ -99,8 +98,8 @@ class MoveZumy:
 if __name__=='__main__':
 
 	#Checks the number of arguments
-	if len(sys.argv) < 2:
-		print('Wrong Number of Arguments!  Use: move_to_location.py [ zumy name ]')
+	if len(sys.argv) < 3:
+		print('Wrong Number of Arguments!  Use: move_to_location.py [ zumy name ] [ar tag number]')
 		sys.exit()
-	little_zumy = MoveZumy(sys.argv[1])
+	little_zumy = MoveZumy(sys.argv[1], sys.argv[2])
 	little_zumy.run()

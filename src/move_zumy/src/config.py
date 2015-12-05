@@ -7,5 +7,5 @@ distThresh	= 0.05		# when we are this close to the target point (in the new coor
 distThreshHigh = 0.15
 finalHeadingThresh = 5  # when we are this many degrees away from the target orientation, stop moving.
 finalTurnSpd = .15		# when we are really close in location and orientation, this is how slowly we turn		
-zumy_ar_pair = {'zumy5b': 'ar_marker_3', 'zumy5c': 'ar_marker_5', 'zumy7a': 'ar_marker_6'} #define Zumy-AR tag pairs
+#zumy_ar_pair = {'zumy5b': 'ar_marker_3', 'zumy5c': 'ar_marker_5', 'zumy7a': 'ar_marker_6'} #define Zumy-AR tag pairs
 
