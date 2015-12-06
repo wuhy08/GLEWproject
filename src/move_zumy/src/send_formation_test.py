@@ -12,6 +12,7 @@ import numpy as np
 import assign_dest as ad
 import collision_checker as cc
 import collision_checker_tests as cct
+import matplotlib.pyplot as plt
 
 class ZumyPosMonitor:
 	def __init__(self, zumy_name, ar_tag_num):
@@ -62,13 +63,18 @@ def translate_cmd_2_coord(formation_string):
 	return coord
 
 if __name__== '__main__':
+	DEBUG_PLOT = True
+	if DEBUG_PLOT:
+		plt.ion()
+		plt.show()
 	rospy.init_node('send_form')
 	is_in_form = False
 	is_goal_reached = True
 	myargv = rospy.myargv()
+	infl_radius = 0.06
 
 
-	if not len(myargv) in [3,5,7,9] :
+	if not len(myargv) in [3,5,7,9]:
 		print('Wrong Number of Arguments!  We need to have valid Zumy and AR tag pairs')
 		sys.exit()
 	zumy_numbers = (len(myargv)-1)/2
@@ -78,6 +84,7 @@ if __name__== '__main__':
 	goal_pos_for_srv = {}
 	latest_zumy_pos_cc = {}
 	goal_pos_for_cc = {}
+	zumy_vector_cc = {}
 	zumy_move_premission = {}
 	i=0
 	move_permission_pub = {}
@@ -119,23 +126,20 @@ if __name__== '__main__':
 													zumy_monitor[curr_zumy_ID].position.y)
 					goal_pos_for_cc[curr_zumy_ID] = cc.Point2D(goal_pos_for_srv[curr_zumy_ID].x,
 														goal_pos_for_srv[curr_zumy_ID].y)
-				permission_result = cc.command_four_zumys(latest_zumy_pos_cc[zumy_ID[0]],
-															goal_pos_for_cc[zumy_ID[0]],
-															latest_zumy_pos_cc[zumy_ID[1]],
-															goal_pos_for_cc[zumy_ID[1]],
-															latest_zumy_pos_cc[zumy_ID[2]],
-															goal_pos_for_cc[zumy_ID[2]],
-															latest_zumy_pos_cc[zumy_ID[3]],
-															goal_pos_for_cc[zumy_ID[3]])
-				zumy_move_premission[zumy_ID[0]] = permission_result[1]['zumy1_go']
-				zumy_move_premission[zumy_ID[1]] = permission_result[1]['zumy2_go']
-				zumy_move_premission[zumy_ID[2]] = permission_result[1]['zumy3_go']
-				zumy_move_premission[zumy_ID[3]] = permission_result[1]['zumy4_go']
-				# cct.plot_bounding_boxes(permission_result[0], cc.Vector2D(latest_zumy_pos_cc[zumy_ID[0]],
-				# goal_pos_for_cc[zumy_ID[0]]), cc.Vector2D(latest_zumy_pos_cc[zumy_ID[1]],
-				# goal_pos_for_cc[zumy_ID[1]]),  cc.Vector2D(latest_zumy_pos_cc[zumy_ID[2]],
-				# goal_pos_for_cc[zumy_ID[2]]), cc.Vector2D(latest_zumy_pos_cc[zumy_ID[3]],
-				# goal_pos_for_cc[zumy_ID[3]]), 0.06)
+					zumy_vector_cc[curr_zumy_ID] = cc.Vector2D(latest_zumy_pos_cc[curr_zumy_ID], 
+																goal_pos_for_cc[curr_zumy_ID])
+				permission_result = cc.command_n_zumys(zumy_vector_cc, zumy_ID, infl_radius)
+				for curr_zumy_ID in zumy_ID:
+					zumy_move_premission[curr_zumy_ID] = permission_result[1][curr_zumy_ID]
+				# cct.plot_bounding_boxes(permission_result[0].values(), 
+				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[0]], goal_pos_for_cc[zumy_ID[0]]), 
+				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[1]], goal_pos_for_cc[zumy_ID[1]]),  
+				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[2]], goal_pos_for_cc[zumy_ID[2]]), 
+				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[3]], goal_pos_for_cc[zumy_ID[3]]), 
+				# 	infl_radius)
+				cct.plot_bounding_boxes(permission_result[0].values(), 
+					zumy_vector_cc.values(),
+					infl_radius)
 				for curr_zumy_ID in zumy_ID:
 					#move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
 					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID])
