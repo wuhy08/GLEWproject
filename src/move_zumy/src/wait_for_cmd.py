@@ -9,6 +9,7 @@ from std_msgs.msg import Bool
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
 import get_vel_2
+import get_vel_3 as gv
 
 #Creat class MoveZumy, all the publishing, subscribing and Service will happen here
 class MoveZumy:
@@ -81,7 +82,7 @@ class MoveZumy:
 		#Plugging the information from Haoyu's code into Vijay's getCmdVel function to calculate v_x and omega_z
 		#while self.goalCounter<5:
 		(vel, self.goal_flag, self.historyNearGoal) = \
-			get_vel_2.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
+			gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
 
 	#Creating the ability to publish to the zumy
 

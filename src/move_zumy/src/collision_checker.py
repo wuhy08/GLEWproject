@@ -282,7 +282,7 @@ def command_four_zumys(zumy1_start, zumy1_goal, zumy2_start, zumy2_goal, zumy3_s
 	
 	# Hard-coded configuration parameter for now.  Maybe use config.py for this.
 	# Equal to the radius of the robot + radius error margin.
-	dist_thresh = 0.125
+	dist_thresh = 0.06
 	
 	# Priority based assignment with collision avoidance.
 
@@ -327,6 +327,8 @@ def command_four_zumys(zumy1_start, zumy1_goal, zumy2_start, zumy2_goal, zumy3_s
 	zumy4BoundingBox = getBoundingBox(Vector2D(zumy4_start, zumy4_goal), dist_thresh, (not zumy4_intersection))
 
 	boundingBoxList = [zumy1BoundingBox, zumy2BoundingBox, zumy3BoundingBox, zumy4BoundingBox]
+	print {'zumy1_go': (not zumy1_intersection), 'zumy2_go': (not zumy2_intersection), \
+		    'zumy3_go': (not zumy3_intersection), 'zumy4_go': (not zumy4_intersection)}
 	return (boundingBoxList, {'zumy1_go': (not zumy1_intersection), 'zumy2_go': (not zumy2_intersection), \
 		    'zumy3_go': (not zumy3_intersection), 'zumy4_go': (not zumy4_intersection)})
 
