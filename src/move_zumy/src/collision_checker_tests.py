@@ -78,6 +78,29 @@ def plot_bounding_box(rect, path_vector, radius):
 	plt.axis('equal')
 	plt.draw()	
 
+def plot_n_bounding_boxes(rects, vlist, radius):
+	plt.clf()
+	for rect in rects:
+		for v in (rect.side1, rect.side2, rect.side3, rect.side4):
+			plt.plot([v.point1.x, v.point2.x], [v.point1.y, v.point2.y], color='k', linewidth=2.0)
+			plt.plot([v.point1.x], [v.point1.y], 'o', mec = 'k', mfc = 'k', ms = 5)
+			plt.plot([v.point2.x], [v.point2.y], 'o',  mec = 'k', mfc = 'k', ms = 5)
+
+	fig = plt.gcf()
+
+	for v in vlist:
+		plt.plot([v.point1.x, v.point2.x], [v.point1.y, v.point2.y], color='b', linewidth=2.0)
+		plt.plot([v.point1.x], [v.point1.y], 'o', mec = 'r', mfc = 'r', ms = 5)
+		plt.plot([v.point2.x], [v.point2.y], 'o',  mec = 'g', mfc = 'g', ms = 5)
+		circle_st=plt.Circle((v.point1.x, v.point1.y),radius,color='r',fill=False)
+		circle_end=plt.Circle((v.point2.x, v.point2.y),radius, color='g', fill=False)
+		fig.gca().add_artist(circle_st)
+		fig.gca().add_artist(circle_end)	
+
+	plt.axis('equal')
+	plt.draw()	
+
+
 def plot_bounding_boxes(rects, v1, v2, v3, v4, radius):
 	plt.clf()
 	for rect in rects:
@@ -265,7 +288,7 @@ if __name__=='__main__':
 	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(3,1))
 	print command_tuple[1]
 	if(run_plot > 0):
-		plot_bounding_boxes(command_tuple[0], v1,v2,v3,v4, 0.125)
+		plot_n_bounding_boxes(command_tuple[0], [v1,v2,v3,v4], 0.125)
 		time.sleep(1)
 
 	command_tuple = cc.command_four_zumys(cc.Point2D(0,0), cc.Point2D(2,2), cc.Point2D(1,0), cc.Point2D(1,1), \
@@ -276,7 +299,7 @@ if __name__=='__main__':
 	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(1,1))
 	print command_tuple[1]
 	if(run_plot > 0):
-		plot_bounding_boxes(command_tuple[0], v1,v2,v3,v4, 0.125)
+		plot_n_bounding_boxes(command_tuple[0], [v1,v2,v3,v4], 0.125)
 		time.sleep(1)
 
 
@@ -291,7 +314,7 @@ if __name__=='__main__':
 	command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
 	print command_tuple[1]
 	if(run_plot > 0):
-		plot_bounding_boxes(command_tuple[0].values(), v1,v2,v3,v4, 0.125)
+		plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
 		time.sleep(1)
 
 	v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(2,2))
@@ -303,7 +326,7 @@ if __name__=='__main__':
 	command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
 	print command_tuple[1]
 	if(run_plot > 0):
-		plot_bounding_boxes(command_tuple[0].values(), v1,v2,v3,v4, 0.125)
+		plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
 		time.sleep(1)
 
 
