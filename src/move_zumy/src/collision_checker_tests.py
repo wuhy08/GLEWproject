@@ -21,21 +21,24 @@ def plot_vector(v1):
 	# Plot the vector and start and end points.
 	# Set properties for vector and endpoints.  mec = marker edge color, mfc = "" face "", ms = marker size
 	# Colors = b,g,r,m,c,y, k(black),w or RGB tuple (r,g,b)
+	plt.clf()
 	plt.plot([v1.point1.x, v1.point2.x], [v1.point1.y, v1.point2.y], color='b', linewidth=2.0)
 	plt.plot([v1.point1.x], [v1.point1.y], 'o', mec = 'r', mfc = 'r', ms = 5)
 	plt.plot([v1.point2.x], [v1.point2.y], 'o',  mec = 'g', mfc = 'g', ms = 5)
 	plt.axis('equal')
-	plt.show()
+	plt.draw()
 
 def plot_vectors(v_tuple):
+	plt.clf()
 	for v in v_tuple:
 		plt.plot([v.point1.x, v.point2.x], [v.point1.y, v.point2.y], color='b', linewidth=2.0)
 		plt.plot([v.point1.x], [v.point1.y], 'o', mec = 'r', mfc = 'r', ms = 5)
 		plt.plot([v.point2.x], [v.point2.y], 'o',  mec = 'g', mfc = 'g', ms = 5)
 	plt.axis('equal')
-	plt.show()
+	plt.draw()
 
 def plot_perp_vectors(v1, v2, v3):
+	plt.clf()
 	# Vector 1 - Blue
 	# Set properties for vector and endpoints.  mec = marker edge color, mfc = "" face "", ms = marker size
 	# Colors = b,g,r,m,c,y, k(black),w or RGB tuple (r,g,b)
@@ -54,9 +57,10 @@ def plot_perp_vectors(v1, v2, v3):
 	plt.plot([v3.point2.x], [v3.point2.y], 'o', mec = 'g', mfc = 'g', ms = 5)
 	
 	plt.axis('equal')
-	plt.show()	
+	plt.draw()	
 
 def plot_bounding_box(rect, path_vector, radius):
+	plt.clf()
 	circle_st=plt.Circle((path_vector.point1.x, path_vector.point1.y),radius,color='r',fill=False)
 	circle_end=plt.Circle((path_vector.point2.x, path_vector.point2.y),radius, color='g', fill=False)
 
@@ -72,9 +76,10 @@ def plot_bounding_box(rect, path_vector, radius):
 	fig.gca().add_artist(circle_st)
 	fig.gca().add_artist(circle_end)	
 	plt.axis('equal')
-	plt.show()	
+	plt.draw()	
 
 def plot_bounding_boxes(rects, v1, v2, v3, v4, radius):
+	plt.clf()
 	for rect in rects:
 		for v in (rect.side1, rect.side2, rect.side3, rect.side4):
 			plt.plot([v.point1.x, v.point2.x], [v.point1.y, v.point2.y], color='k', linewidth=2.0)
@@ -93,7 +98,7 @@ def plot_bounding_boxes(rects, v1, v2, v3, v4, radius):
 		fig.gca().add_artist(circle_end)	
 
 	plt.axis('equal')
-	plt.show()	
+	plt.draw()	
 
 def vector_basic_check(x1,y1,x2,y2, run_plot):
 	v1 = cc.Vector2D(cc.Point2D(x1,y1), cc.Point2D(x2,y2))
@@ -177,6 +182,9 @@ def bounding_box_check(start_x, start_y, end_x, end_y, robot_radius, isMoving, r
 #************************************************#
 if __name__=='__main__':
 	run_plot = int(sys.argv[1])
+	if run_plot:
+		plt.ion()
+		plt.show()
 
 	# Point2D Checks
 #	point_check(0.5,0.5,1.5,1.5)
@@ -258,6 +266,7 @@ if __name__=='__main__':
 	print command_tuple[1]
 	if(run_plot > 0):
 		plot_bounding_boxes(command_tuple[0], v1,v2,v3,v4, 0.125)
+		time.sleep(1)
 
 	command_tuple = cc.command_four_zumys(cc.Point2D(0,0), cc.Point2D(2,2), cc.Point2D(1,0), cc.Point2D(1,1), \
 									 cc.Point2D(2,0), cc.Point2D(2,1), cc.Point2D(3,0), cc.Point2D(1,1))
@@ -268,6 +277,8 @@ if __name__=='__main__':
 	print command_tuple[1]
 	if(run_plot > 0):
 		plot_bounding_boxes(command_tuple[0], v1,v2,v3,v4, 0.125)
+		time.sleep(1)
+
 
 	# Test Command command_n_zumys
 	print("Testing n zumy assignment code")
@@ -281,6 +292,7 @@ if __name__=='__main__':
 	print command_tuple[1]
 	if(run_plot > 0):
 		plot_bounding_boxes(command_tuple[0].values(), v1,v2,v3,v4, 0.125)
+		time.sleep(1)
 
 	v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(2,2))
 	v2 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(1,1))
@@ -292,6 +304,7 @@ if __name__=='__main__':
 	print command_tuple[1]
 	if(run_plot > 0):
 		plot_bounding_boxes(command_tuple[0].values(), v1,v2,v3,v4, 0.125)
+		time.sleep(1)
 
 
 #   Failing rectangle case (can uncomment if you like)
