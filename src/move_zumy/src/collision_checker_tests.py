@@ -179,74 +179,76 @@ if __name__=='__main__':
 	run_plot = int(sys.argv[1])
 
 	# Point2D Checks
-	point_check(0.5,0.5,1.5,1.5)
-	point_check(1,1,1,1)
-	point_check(0.25, 0.34, 0.25, 0.34)
-	point_check(-3,2,2,5.5)
+#	point_check(0.5,0.5,1.5,1.5)
+#	point_check(1,1,1,1)
+#	point_check(0.25, 0.34, 0.25, 0.34)
+#	point_check(-3,2,2,5.5)
 	
 	# Vector 2D Checks
-	vector_basic_check(0.5, 0.5, -0.5, 0.8, run_plot)
-	vector_basic_check(0.0, 0.0, 1.0, 1.0, run_plot)
+#	vector_basic_check(0.5, 0.5, -0.5, 0.8, run_plot)
+#	vector_basic_check(0.0, 0.0, 1.0, 1.0, run_plot)
 
 	# V2D Intersection Check 1: line segments crisscross
-	vector_intersect_check(((0.1,0.2),(0.5,1.0)), ((0.2, 0.8),(0.5,0.2)), run_plot)
+#	vector_intersect_check(((0.1,0.2),(0.5,1.0)), ((0.2, 0.8),(0.5,0.2)), run_plot)
 
 	# V2D Intersection Check 2: parallel line segments apart by 1 unit
-	vector_intersect_check(((1,2),(3,4)), ((1,3),(3,5)), run_plot)
+#	vector_intersect_check(((1,2),(3,4)), ((1,3),(3,5)), run_plot)
 
 	# V2D Intersection Check 3: parallel line segments that overlap
-	vector_intersect_check(((1,2),(3,4)), ((1.5,2.5),(2,3)), run_plot)
+#	vector_intersect_check(((1,2),(3,4)), ((1.5,2.5),(2,3)), run_plot)
 	
 	# V2D Intersection Check 4: One vertical line segment, other intersects
-	vector_intersect_check(((2.5,2),(2.5,4.4)), ((1.5,2.5),(3,2.5)), run_plot)
+#	vector_intersect_check(((2.5,2),(2.5,4.4)), ((1.5,2.5),(3,2.5)), run_plot)
 
 	# V2D Intersection Check 5: Two vertical line segments, intersects
-	vector_intersect_check(((5,1),(5,2)), ((5,-1.5),(5,1)), run_plot)
+#	vector_intersect_check(((5,1),(5,2)), ((5,-1.5),(5,1)), run_plot)
 
 	# V2D Intersection Check 6: Two vertical line segments, no intersections
-	vector_intersect_check(((1,1),(1,2)), ((2,2),(2,1)), run_plot)
+#	vector_intersect_check(((1,1),(1,2)), ((2,2),(2,1)), run_plot)
 
 	# Rectangle Check
-	va1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,1))
-	va2 = cc.Vector2D(cc.Point2D(0,1), cc.Point2D(1,1))
-	va3 = cc.Vector2D(cc.Point2D(1,1), cc.Point2D(1,0))
-	va4 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(0,0))
-	ra = rect_check(va1,va2,va3,va4, run_plot) # RA = square
+#	va1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,1))
+#	va2 = cc.Vector2D(cc.Point2D(0,1), cc.Point2D(1,1))
+#	va3 = cc.Vector2D(cc.Point2D(1,1), cc.Point2D(1,0))
+#	va4 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(0,0))
+#	ra = rect_check(va1,va2,va3,va4, run_plot) # RA = square
 
-	vb1 = cc.Vector2D(cc.Point2D(-1,0.25), cc.Point2D(3,0.25))
-	vb2 = cc.Vector2D(cc.Point2D(3,0.25), cc.Point2D(3,0.75))
-	vb3 = cc.Vector2D(cc.Point2D(3,0.75), cc.Point2D(-1,0.75))
-	vb4 = cc.Vector2D(cc.Point2D(-1,0.75), cc.Point2D(-1,0.25))
-	rb = rect_check(vb1, vb2, vb3, vb4, run_plot) # RB = thin horizontal rectangle
+#	vb1 = cc.Vector2D(cc.Point2D(-1,0.25), cc.Point2D(3,0.25))
+#	vb2 = cc.Vector2D(cc.Point2D(3,0.25), cc.Point2D(3,0.75))
+#	vb3 = cc.Vector2D(cc.Point2D(3,0.75), cc.Point2D(-1,0.75))
+#	vb4 = cc.Vector2D(cc.Point2D(-1,0.75), cc.Point2D(-1,0.25))
+#	rb = rect_check(vb1, vb2, vb3, vb4, run_plot) # RB = thin horizontal rectangle
 
-	vc1 = cc.Vector2D(cc.Point2D(0.3,-0.3), cc.Point2D(1.3,0.7))
-	vc2 = cc.Vector2D(cc.Point2D(1.3,0.7), cc.Point2D(1.05,0.95))
-	vc3 = cc.Vector2D(cc.Point2D(1.05,0.95), cc.Point2D(0.05,-0.05))
-	vc4 = cc.Vector2D(cc.Point2D(0.05,-0.05), cc.Point2D(0.3,-0.3))
-	rc = rect_check(vc1, vc2, vc3, vc4, run_plot) # RC = slanted rectangle
+#	vc1 = cc.Vector2D(cc.Point2D(0.3,-0.3), cc.Point2D(1.3,0.7))
+#	vc2 = cc.Vector2D(cc.Point2D(1.3,0.7), cc.Point2D(1.05,0.95))
+#	vc3 = cc.Vector2D(cc.Point2D(1.05,0.95), cc.Point2D(0.05,-0.05))
+#	vc4 = cc.Vector2D(cc.Point2D(0.05,-0.05), cc.Point2D(0.3,-0.3))
+#	rc = rect_check(vc1, vc2, vc3, vc4, run_plot) # RC = slanted rectangle
 
-	vd1 = copy.deepcopy(va1)
-	vd2 = copy.deepcopy(va2)
-	vd3 = copy.deepcopy(va3)
-	vd4 = copy.deepcopy(va4)
-	for v in (vd1, vd2, vd3, vd4):
-		v.point1.x = v.point1.x + 1.3
-		v.point1.y = v.point1.y + 0.7
-		v.point2.x = v.point2.x + 1.3
-		v.point2.y = v.point2.y + 0.7
-	rd = rect_check(vd1, vd2, vd3, vd4, run_plot) # RD = square at corner of RC
+#	vd1 = copy.deepcopy(va1)
+#	vd2 = copy.deepcopy(va2)
+#	vd3 = copy.deepcopy(va3)
+#	vd4 = copy.deepcopy(va4)
+#	for v in (vd1, vd2, vd3, vd4):
+#		v.point1.x = v.point1.x + 1.3
+#		v.point1.y = v.point1.y + 0.7
+#		v.point2.x = v.point2.x + 1.3
+#		v.point2.y = v.point2.y + 0.7
+#	rd = rect_check(vd1, vd2, vd3, vd4, run_plot) # RD = square at corner of RC
 
 	#R2D Intersection Check: Look at every pair of rectangles that are not the same and look for intersection.
-	for r1 in (ra, rb, rc, rd):
-		for r2 in (ra, rb, rc, rd):
-			if not (r1 == r2):
-				rect_intersection_check(r1,r2)
+#	for r1 in (ra, rb, rc, rd):
+#		for r2 in (ra, rb, rc, rd):
+#			if not (r1 == r2):
+#				rect_intersection_check(r1,r2)
 
-	bb1 = bounding_box_check(0, 0, 1, 1, 0.125, True, run_plot)
-	bb2 = bounding_box_check(0, 0, 1, 1, 0.125, False, run_plot)
-	bb3 = bounding_box_check(-1, 0.35, 0.68, -0.72, 0.125, True, run_plot)
-	bb4 = bounding_box_check(-1, 0.35, 0.68, -0.72, 0.125, False, run_plot)
+#	bb1 = bounding_box_check(0, 0, 1, 1, 0.125, True, run_plot)
+#	bb2 = bounding_box_check(0, 0, 1, 1, 0.125, False, run_plot)
+#	bb3 = bounding_box_check(-1, 0.35, 0.68, -0.72, 0.125, True, run_plot)
+#	bb4 = bounding_box_check(-1, 0.35, 0.68, -0.72, 0.125, False, run_plot)
 
+	# Test Command command_four_zumys
+	print("Testing four zumy assignment code")
 	command_tuple = cc.command_four_zumys(cc.Point2D(0,0), cc.Point2D(0,1), cc.Point2D(1,0), cc.Point2D(1,1), \
 									 cc.Point2D(2,0), cc.Point2D(2,1), cc.Point2D(3,0), cc.Point2D(3,1))
 	v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,1))
@@ -267,6 +269,29 @@ if __name__=='__main__':
 	if(run_plot > 0):
 		plot_bounding_boxes(command_tuple[0], v1,v2,v3,v4, 0.125)
 
+	# Test Command command_n_zumys
+	print("Testing n zumy assignment code")
+	v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,1))
+	v2 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(1,1))
+	v3 = cc.Vector2D(cc.Point2D(2,0), cc.Point2D(2,1))
+	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(3,1))
+	zumy_vect_dict= {'z1':v1, 'z2':v2, 'z3':v3, 'z4':v4}
+	zumy_prior_list= ['z4', 'z3', 'z2', 'z1']
+	command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
+	print command_tuple[1]
+	if(run_plot > 0):
+		plot_bounding_boxes(command_tuple[0].values(), v1,v2,v3,v4, 0.125)
+
+	v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(2,2))
+	v2 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(1,1))
+	v3 = cc.Vector2D(cc.Point2D(2,0), cc.Point2D(2,1))
+	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(1,1))
+	zumy_vect_dict= {'z1':v1, 'z2':v2, 'z3':v3, 'z4':v4}
+	zumy_prior_list= ['z2', 'z3', 'z4', 'z1']
+	command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
+	print command_tuple[1]
+	if(run_plot > 0):
+		plot_bounding_boxes(command_tuple[0].values(), v1,v2,v3,v4, 0.125)
 
 
 #   Failing rectangle case (can uncomment if you like)
