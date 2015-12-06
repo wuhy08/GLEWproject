@@ -5,10 +5,12 @@ import math
 from ar_coord.msg import ZumyCoord
 from geometry_msgs.msg import Twist, Pose2D
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
+from std_msgs.msg import Bool
 #import get_vel
 import config
 import numpy as np
 import assign_dest as ad
+import collision_checker as cc
 
 class ZumyPosMonitor:
 	def __init__(self, zumy_name, ar_tag_num):
@@ -59,27 +61,38 @@ def translate_cmd_2_coord(formation_string):
 	return coord
 
 if __name__== '__main__':
+	is_in_form = False
 	is_goal_reached = True
 	myargv = rospy.myargv()
-	if not len(myargv) == 9:
-		print('Wrong Number of Arguments!  We need to have 4 Zumys')
+
+
+	if not len(myargv) in [3,5,7,9] :
+		print('Wrong Number of Arguments!  We need to have valid Zumy and AR tag pairs')
 		sys.exit()
-	zumy_ID = myargv[1:5]
-	ar_tag_nums = myargv[5:]
+	zumy_numbers = (len(myargv)-1)/2
+	zumy_ID = myargv[1:zumy_numbers+1]
+	ar_tag_nums = myargv[zumy_numbers+1:]
 	zumy_monitor = {}
 	goal_pos_for_srv = {}
+	latest_zumy_pos_cc = {}
+	goal_pos_for_cc = {}
+	zumy_move_premission = {}
 	i=0
+	move_permission_pub = {}
 	for curr_zumy_ID in zumy_ID:
 		zumy_monitor[curr_zumy_ID] = ZumyPosMonitor(curr_zumy_ID, ar_tag_nums[i])
+		move_permission_pub[curr_zumy_ID]=rospy.Publisher('/'+curr_zumy_ID+'/MovePermission',
+												Bool, queue_size = 2)
 		i = i + 1
 
 	predef_formation_command = ['h', 's', 't', 'd', 'v']
+	predef_unison_command = ['f', 'b', 'l', 'r']
 	while True:
 		final_dest_counter = 0
 		formation_command = raw_input("Please input formation command:")
-		if formation_command in predef_formation_command:
+		if (formation_command in predef_formation_command):
 			final_destination = translate_cmd_2_coord(formation_command)
-			latest_zumy_pos = np.zeros((4,3))
+			latest_zumy_pos = np.zeros((zumy_numbers,3))
 			ii = 0
 			for curr_zumy_ID in zumy_ID:
 				latest_zumy_pos[ii] = np.array([zumy_monitor[curr_zumy_ID].position.x,
@@ -100,19 +113,42 @@ if __name__== '__main__':
 			while final_dest_counter<5:
 				zumy_reach_num = 0
 				for curr_zumy_ID in zumy_ID:
+					latest_zumy_pos_cc[curr_zumy_ID] = cc.Point2D(zumy_monitor[curr_zumy_ID].position.x,
+													zumy_monitor[curr_zumy_ID].position.y)
+					goal_pos_for_cc[curr_zumy_ID] = cc.Point2D(goal_pos_for_srv[curr_zumy_ID].x,
+														goal_pos_for_srv[curr_zumy_ID].y)
+				permission_result = cc.command_four_zumys(latest_zumy_pos_cc[zumy_ID[0]],
+															goal_pos_for_cc[zumy_ID[0]],
+															latest_zumy_pos_cc[zumy_ID[1]],
+															goal_pos_for_cc[zumy_ID[1]],
+															latest_zumy_pos_cc[zumy_ID[2]],
+															goal_pos_for_cc[zumy_ID[2]],
+															latest_zumy_pos_cc[zumy_ID[3]],
+															goal_pos_for_cc[zumy_ID[3]])
+				zumy_move_premission[zumy_ID[0]] = permission_result[1]['zumy1_go']
+				zumy_move_premission[zumy_ID[1]] = permission_result[1]['zumy2_go']
+				zumy_move_premission[zumy_ID[2]] = permission_result[1]['zumy3_go']
+				zumy_move_premission[zumy_ID[3]] = permission_result[1]['zumy4_go']
+				for curr_zumy_ID in zumy_ID:
+					move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
 					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID])
 					if is_goal_reached:
 						zumy_reach_num = zumy_reach_num + 1
 				print zumy_reach_num
-				if zumy_reach_num == 3:
+				if zumy_reach_num == zumy_numbers:
 					final_dest_counter = final_dest_counter + 1
-				if not zumy_reach_num == 3:
+				if not zumy_reach_num == zumy_numbers:
 					final_dest_counter = 0
+			is_in_form = True
+
+		elif (formation_command in predef_unison_command):
+			if not is_in_form:
+				print("Error! Zumys are not in formation yet!")
+				continue
+			
 
 
-
-
-		if not formation_command in predef_formation_command:
+		else:
 			print("Error! Please only input predefined command.")
 
 

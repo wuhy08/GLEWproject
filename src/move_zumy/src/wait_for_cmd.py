@@ -16,6 +16,8 @@ class MoveZumy:
 		rospy.init_node('move_zumy'+zumy_name)
 		self.name = zumy_name
 		self.position = ZumyCoord().position
+		self.prevPosition = ZumyCoord().position
+		self.posUnkown = True
 		self.ARTag = 'ar_marker_'+ ar_tag_num
 		#Will subscribe to corresponding AR tag postion 
 		#and once get new message, call getPos to update position
@@ -24,6 +26,7 @@ class MoveZumy:
 		self.goal = self.position
 		self.goal_flag = True
 		self.historyNearGoal = False
+		self.alpha = 0.9
 		#self.goalCounter = 0
 		#moveEnable will enable or disable the movement of Zumy
 		self.moveEnable = True
@@ -47,7 +50,18 @@ class MoveZumy:
 		rospy.spin()
 	#getPos will be called to update zumy's position when receive a new message from topic
 	def getPos(self, msg):
-		self.position = msg.position
+		if self.posUnkown:
+			self.position = msg.position
+			self.prevPosition = msg.position
+			self.posUnkown = False
+		else:
+			self.prevPosition = self.position
+			self.position.x = self.alpha * msg.position.x +\
+			 					(1-self.alpha) * self.prevPosition.x
+			self.position.y = self.alpha * msg.position.y +\
+			 					(1-self.alpha) * self.prevPosition.y
+			self.position.theta = self.alpha * msg.position.theta +\
+			 					(1-self.alpha) * self.prevPosition.theta
 		#print self.position
 
 	def move(self, request):
