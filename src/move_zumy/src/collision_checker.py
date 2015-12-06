@@ -331,3 +331,63 @@ def command_four_zumys(zumy1_start, zumy1_goal, zumy2_start, zumy2_goal, zumy3_s
 		    'zumy3_go': (not zumy3_intersection), 'zumy4_go': (not zumy4_intersection)})
 #****************************************************#
 #***** End of main traffic controlling function *****#		
+
+
+# def command_n_zumys(zumy_start_dict, zumy_end_dict, zumy_prior_dict):
+# 	# To Do: Check that user gave an input of Point2D - else need to construct Point2Ds here.
+# 	start_dict_length = len(zumy_start_dict)
+# 	end_dict_length = len(zumy_end_dict)
+# 	if not (start_dict_length==end_dict_length and zumy_start_dict.viewkeys() == zumy_end_dict.viewkeys()):
+# 		print "Error! dictionary error!"
+# 		raise ValueError
+# 	for curr_zumy in zumy_start_dict.keys():
+
+# 	# Hard-coded configuration parameter for now.  Maybe use config.py for this.
+# 	# Equal to the radius of the robot + radius error margin.
+# 	dist_thresh = 0.125
+	
+# 	# Priority based assignment with collision avoidance.
+
+# 	# Step 1: Assume R1 has highest priority and can move.  All robots with lower priority are stopped.
+# 	zumy1BoundingBox = getBoundingBox(Vector2D(zumy1_start, zumy1_goal), dist_thresh, True)
+# 	zumy2BoundingBox = getBoundingBox(Vector2D(zumy2_start, zumy2_goal), dist_thresh, False)
+# 	zumy3BoundingBox = getBoundingBox(Vector2D(zumy3_start, zumy3_goal), dist_thresh, False)
+# 	zumy4BoundingBox = getBoundingBox(Vector2D(zumy4_start, zumy4_goal), dist_thresh, False)
+
+# 	# Step 2: See if R1's path will intersect with any of the stopped robots.
+# 	zumy1_intersection = zumy1BoundingBox.isRectIntersection(zumy2BoundingBox) or \
+# 						 zumy1BoundingBox.isRectIntersection(zumy3BoundingBox) or \
+# 						 zumy1BoundingBox.isRectIntersection(zumy4BoundingBox)
+
+# 	# Step 3: Update R1's path based on whether it has permission to move or not.
+# 	zumy1BoundingBox = getBoundingBox(Vector2D(zumy1_start, zumy1_goal), dist_thresh, (not zumy1_intersection))
+
+# 	# Repeat Steps 1-3 for R2.  R1 can move or not according to above.  R3 and R4 are stopped.
+# 	zumy2BoundingBox = getBoundingBox(Vector2D(zumy2_start, zumy2_goal), dist_thresh, True)
+# 	zumy2_intersection = zumy2BoundingBox.isRectIntersection(zumy1BoundingBox) or \
+# 						 zumy2BoundingBox.isRectIntersection(zumy3BoundingBox) or \
+# 						 zumy2BoundingBox.isRectIntersection(zumy4BoundingBox)
+
+# 	zumy2BoundingBox = getBoundingBox(Vector2D(zumy2_start, zumy2_goal), dist_thresh, (not zumy2_intersection))
+
+# 	# Repeat Steps 1-3 for R3.  R1 and R2 may be dynamic or static.  R4 is stopped.
+# 	zumy3BoundingBox = getBoundingBox(Vector2D(zumy3_start, zumy3_goal), dist_thresh, True)
+
+# 	zumy3_intersection = zumy3BoundingBox.isRectIntersection(zumy1BoundingBox) or \
+# 						 zumy3BoundingBox.isRectIntersection(zumy2BoundingBox) or \
+# 						 zumy3BoundingBox.isRectIntersection(zumy4BoundingBox)
+
+# 	zumy3BoundingBox = getBoundingBox(Vector2D(zumy3_start, zumy3_goal), dist_thresh, (not zumy3_intersection))
+
+# 	# Repeat Steps 1-3 for R4.  It is the lowest priority robot so all other robots are either moving or stopped.
+# 	zumy4BoundingBox = getBoundingBox(Vector2D(zumy4_start, zumy4_goal), dist_thresh, True)
+
+# 	zumy4_intersection = zumy4BoundingBox.isRectIntersection(zumy1BoundingBox) or \
+# 						 zumy4BoundingBox.isRectIntersection(zumy2BoundingBox) or \
+# 						 zumy4BoundingBox.isRectIntersection(zumy3BoundingBox)
+
+# 	zumy4BoundingBox = getBoundingBox(Vector2D(zumy4_start, zumy4_goal), dist_thresh, (not zumy4_intersection))
+
+# 	boundingBoxList = [zumy1BoundingBox, zumy2BoundingBox, zumy3BoundingBox, zumy4BoundingBox]
+# 	return (boundingBoxList, {'zumy1_go': (not zumy1_intersection), 'zumy2_go': (not zumy2_intersection), \
+# 		    'zumy3_go': (not zumy3_intersection), 'zumy4_go': (not zumy4_intersection)})
