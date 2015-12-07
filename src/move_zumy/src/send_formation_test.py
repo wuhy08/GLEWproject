@@ -34,7 +34,7 @@ def send_loc_req_stat(zumy_name, goal_position):
 		print "Service call failed: %s"%e
 
 
-def translate_cmd_2_coord(formation_string):
+def translate_cmd_2_coord(formation_string, n):
 	if formation_string == 'h':
 		coord = np.array([[0.1, 0.5, 90],
 				[0.37, 0.5, 90],
@@ -56,14 +56,14 @@ def translate_cmd_2_coord(formation_string):
 				[0.3, 0.5, 90],
 				[0.5, 0.8, 90]])
 	if formation_string == 'v':
-		coord = np.array([[0.5, 0.2, 90],
-				[0.5, 0.5, 90],
-				[0.5, 0.8, 90],
-				[0.5, 1.1, 90]]) # Edited by Vijay on 12-6 from [0.5, 0.8, 90] to [0.5, 1.1, 90]
-	return coord
+		coord = np.array([[0.5, 0.1, 90],
+				[0.5, 0.37, 90],
+				[0.5, 0.63, 90],
+				[0.5, 0.9, 90]]) # Edited by Vijay on 12-6 from [0.5, 0.8, 90] to [0.5, 1.1, 90]
+	return coord[0:n]
 
 if __name__== '__main__':
-	DEBUG_PLOT = True
+	DEBUG_PLOT = False
 	if DEBUG_PLOT:
 		plt.ion()
 		plt.show()
@@ -100,7 +100,7 @@ if __name__== '__main__':
 		final_dest_counter = 0
 		formation_command = raw_input("Please input formation command:")
 		if (formation_command in predef_formation_command):
-			final_destination = translate_cmd_2_coord(formation_command)
+			final_destination = translate_cmd_2_coord(formation_command, zumy_numbers)
 			latest_zumy_pos = np.zeros((zumy_numbers,3))
 			ii = 0
 			for curr_zumy_ID in zumy_ID:
@@ -109,7 +109,7 @@ if __name__== '__main__':
 												zumy_monitor[curr_zumy_ID].position.theta])
 				ii = ii + 1
 			#Uncomment the following line to enable optimal path calculation 
-			new_final_destination = ad.find_optimal_path(latest_zumy_pos, final_destination)
+			new_final_destination = ad.find_optimal_path_n(latest_zumy_pos, final_destination)
 			#Uncomment the following line to disable optimal path calculation
 			#new_final_destination = final_destination[0:3]
 			ii = 0
@@ -137,9 +137,9 @@ if __name__== '__main__':
 				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[2]], goal_pos_for_cc[zumy_ID[2]]), 
 				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[3]], goal_pos_for_cc[zumy_ID[3]]), 
 				# 	infl_radius)
-				cct.plot_bounding_boxes(permission_result[0].values(), 
-					zumy_vector_cc.values(),
-					infl_radius)
+				# cct.plot_bounding_boxes(permission_result[0].values(), 
+				# 	zumy_vector_cc.values(),
+				# 	infl_radius)
 				for curr_zumy_ID in zumy_ID:
 					#move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
 					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID])

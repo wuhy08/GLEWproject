@@ -23,7 +23,7 @@ class MoveZumy:
 		#Will subscribe to corresponding AR tag postion 
 		#and once get new message, call getPos to update position
 		rospy.Subscriber('/'+self.ARTag+'/AR_position', ZumyCoord, self.getPos)
-		self.rate = rospy.Rate(10)
+		self.rate = rospy.Rate(40)
 		self.goal = self.position
 		self.goal_flag = True
 		self.historyNearGoal = False
