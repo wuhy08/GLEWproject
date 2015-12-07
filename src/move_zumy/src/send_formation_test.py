@@ -59,7 +59,7 @@ def translate_cmd_2_coord(formation_string):
 		coord = np.array([[0.5, 0.2, 90],
 				[0.5, 0.5, 90],
 				[0.5, 0.8, 90],
-				[0.5, 0.8, 90]])
+				[0.5, 1.1, 90]]) # Edited by Vijay on 12-6 from [0.5, 0.8, 90] to [0.5, 1.1, 90]
 	return coord
 
 if __name__== '__main__':
