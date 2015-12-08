@@ -101,6 +101,6 @@ if __name__== '__main__':
 				zumy_monitor[curr_zumy_ID].vel_pub.publish(twist_to_be_pub)
 				rate.sleep()
 			rot_vel_dict[curr_zumy_ID].append(self.rotSpd)
-			
+	print rot_vel_dict		
 
 
