@@ -25,6 +25,7 @@ def confine_angle(old_angle):
 
 class ZumyPosMonitor:
 	def __init__(self, zumy_name, ar_tag_num):
+		rospy.init_node('calibrate_zumy'+zumy_name)
 		self.name = zumy_name
 		self.position = ZumyCoord().position
 		self.prevPos = ZumyCoord().position
