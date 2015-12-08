@@ -32,9 +32,7 @@ def check_crossing(start1, end1, start2, end2):
 		delta_1 = -(x_cross-x_1)/B_1
 		delta_2 = -(x_cross-x_3)/B_2
 		cross_count = 0
-		if delta_1>0 and delta_1<1:
-			cross_count = cross_count + 1
-		if delta_2>0 and delta_2<1:
+		if delta_1>0 and delta_1<1 and delta_2>0 and delta_2<1:
 			cross_count = cross_count + 1
 		return cross_count
 

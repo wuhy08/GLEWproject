@@ -8,8 +8,8 @@ from tf2_msgs.msg import TFMessage
 from std_msgs.msg import Bool
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
-import get_vel_2
-import get_vel_3 as gv
+import get_vel_2 as gv
+import get_vel_3 
 
 #Creat class MoveZumy, all the publishing, subscribing and Service will happen here
 class MoveZumy:
