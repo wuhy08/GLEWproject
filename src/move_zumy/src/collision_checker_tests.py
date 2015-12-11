@@ -286,21 +286,21 @@ if __name__=='__main__':
 	v2 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(1,1))
 	v3 = cc.Vector2D(cc.Point2D(2,0), cc.Point2D(2,1))
 	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(3,1))
-	print command_tuple[1]
-	if(run_plot > 0):
-		plot_n_bounding_boxes(command_tuple[0], [v1,v2,v3,v4], 0.125)
-		time.sleep(1)
+	#print command_tuple[1]
+	#if(run_plot > 0):
+	#	plot_n_bounding_boxes(command_tuple[0], [v1,v2,v3,v4], 0.125)
+	#	time.sleep(1)
 
-	command_tuple = cc.command_four_zumys(cc.Point2D(0,0), cc.Point2D(2,2), cc.Point2D(1,0), cc.Point2D(1,1), \
-									 cc.Point2D(2,0), cc.Point2D(2,1), cc.Point2D(3,0), cc.Point2D(1,1))
+	#command_tuple = cc.command_four_zumys(cc.Point2D(0,0), cc.Point2D(2,2), cc.Point2D(1,0), cc.Point2D(1,1), \
+	#								 cc.Point2D(2,0), cc.Point2D(2,1), cc.Point2D(3,0), cc.Point2D(1,1))
 	v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(2,2))
 	v2 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(1,1))
 	v3 = cc.Vector2D(cc.Point2D(2,0), cc.Point2D(2,1))
 	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(1,1))
-	print command_tuple[1]
-	if(run_plot > 0):
-		plot_n_bounding_boxes(command_tuple[0], [v1,v2,v3,v4], 0.125)
-		time.sleep(1)
+	#print command_tuple[1]
+	#if(run_plot > 0):
+	#	plot_n_bounding_boxes(command_tuple[0], [v1,v2,v3,v4], 0.125)
+	#	time.sleep(1)
 
 
 	# Test Command command_n_zumys
@@ -311,11 +311,11 @@ if __name__=='__main__':
 	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(3,1))
 	zumy_vect_dict= {'z1':v1, 'z2':v2, 'z3':v3, 'z4':v4}
 	zumy_prior_list= ['z4', 'z3', 'z2', 'z1']
-	command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
-	print command_tuple[1]
-	if(run_plot > 0):
-		plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
-		time.sleep(1)
+	#command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
+	#print command_tuple[1]
+	#if(run_plot > 0):
+	#	plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
+	#	time.sleep(1)
 
 	v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(2,2))
 	v2 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(1,1))
@@ -323,11 +323,24 @@ if __name__=='__main__':
 	v4 = cc.Vector2D(cc.Point2D(3,0), cc.Point2D(1,1))
 	zumy_vect_dict= {'z1':v1, 'z2':v2, 'z3':v3, 'z4':v4}
 	zumy_prior_list= ['z2', 'z3', 'z4', 'z1']
-	command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
-	print command_tuple[1]
+	#command_tuple = cc.command_n_zumys(zumy_vect_dict, zumy_prior_list, 0.125)
+	#print command_tuple[1]
+	#if(run_plot > 0):
+	#	plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
+	#	time.sleep(1)
+
+	z1 = cc.Zumy_Pose(v1.point1.x, v1.point1.y, math.pi/4.0)
+	z2 = cc.Zumy_Pose(v2.point1.x, v2.point1.y, math.pi/2.0)
+	z3 = cc.Zumy_Pose(v3.point1.x, v3.point1.y, math.pi/2.0)
+	theta4 = math.atan2(v4.point2.y-v4.point1.y, v4.point2.x-v4.point1.x)
+	z4 = cc.Zumy_Pose(v4.point1.x, v4.point1.y, theta4)
+	collision_res = cc.check_zumy_static_collision([z1, z2, z3, z4], 0.125)
+	print collision_res[1]
 	if(run_plot > 0):
-		plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
-		time.sleep(1)
+		vector_list = [cc.Vector2D(cc.Point2D(z1.x, z1.y),cc.Point2D(z1.x, z1.y)), cc.Vector2D(cc.Point2D(z2.x, z2.y),cc.Point2D(z2.x, z2.y)),\
+					   cc.Vector2D(cc.Point2D(z3.x, z3.y),cc.Point2D(z3.x, z3.y)), cc.Vector2D(cc.Point2D(z4.x, z4.y), cc.Point2D(z4.x, z4.y))]
+		plot_n_bounding_boxes(collision_res[0], vector_list, 0.125)
+		time.sleep(5)
 
 
 #   Failing rectangle case (can uncomment if you like)

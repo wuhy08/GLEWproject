@@ -71,7 +71,7 @@ if __name__== '__main__':
 	is_in_form = False
 	is_goal_reached = True
 	myargv = rospy.myargv()
-	infl_radius = 0.06
+	infl_radius = 0.02
 
 
 	if not len(myargv) in [3,5,7,9]:
@@ -141,7 +141,7 @@ if __name__== '__main__':
 				# 	zumy_vector_cc.values(),
 				# 	infl_radius)
 				for curr_zumy_ID in zumy_ID:
-					#move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
+					move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
 					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID])
 					if is_goal_reached:
 						zumy_reach_num = zumy_reach_num + 1

@@ -367,3 +367,32 @@ def command_n_zumys(zumy_vect_dict, zumy_prior_list, dist_thresh):
 
 #****************************************************#
 #***** End of main traffic controlling function *****#
+
+#***** A* multi-robot collision checking function *****#
+#******************************************************#
+# Class to hold robot position data (essentially the same as Pose2D).
+# Theta is in radians.
+class Zumy_Pose:
+	def __init__(self, x, y, theta):
+		self.x = float(x)
+		self.y = float(y)
+		self.theta = float(theta)
+		# theta should be in radians, maybe can add a check for this when used.
+
+def check_zumy_static_collision(zumy_pose_list, infl_robot_radius):
+	zumy_BBox_List = []
+	for rbt in zumy_pose_list:
+		if not isinstance(rbt, Zumy_Pose):
+			print "Error: First input should be a list of Zumy_Pose classes"
+			raise TypeError
+		# Construct a unit vector to encode robot's position and heading.
+		path_vector = Vector2D(Point2D(rbt.x, rbt.y), Point2D(rbt.x+math.cos(rbt.theta), rbt.y+math.sin(rbt.theta)))
+		# Add this robot's bounding box.  This robot is treated as a static obstacle, so set moving parameter to False.
+		zumy_BBox_List.append(getBoundingBox(path_vector, infl_robot_radius, False))
+	print "Here"
+	for rbt_i in range(0, len(zumy_BBox_List)):
+		for rbt_j in range(rbt_i, len(zumy_BBox_List)):
+			# Iterate through every unique pairing of robots in the list.
+			if zumy_BBox_List[rbt_i].isRectIntersection(zumy_BBox_List[rbt_j]):
+				return (zumy_BBox_List, True)
+	return (zumy_BBox_List, False)

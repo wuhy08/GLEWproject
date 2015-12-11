@@ -77,6 +77,7 @@ if __name__=='__main__':
     rot = {}
     latest_t = {}
     zumy_coord_pub = {}
+    zumy_coord_pub_for_all = rospy.Publisher("/zumy_position", ZumyCoord, queue_size=10)
     for curr_ar_tag in ar_tag_names[3:]:
         zumy_coord_pub[curr_ar_tag] = rospy.Publisher("/"+ curr_ar_tag +"/AR_position", 
             ZumyCoord, queue_size=10)
@@ -125,6 +126,7 @@ if __name__=='__main__':
                     curr_msg.position.y = curr_coord[1]
                     curr_msg.position.theta = curr_theta
                     zumy_coord_pub[curr_ar_tag].publish(curr_msg)
+                    zumy_coord_pub_for_all.publish(curr_msg)
                     # print curr_ar_tag
                     # print curr_coord
                     # print curr_theta

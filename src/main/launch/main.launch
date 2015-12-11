@@ -1,18 +1,18 @@
 <launch>
 
-  <arg name="mname1" default="zumy7a"/>
+  <arg name="mname1" default="zumy5b"/>
 
-  <arg name="mname2" default="zumy5c"/>
+  <arg name="mname2" default="zumyBML6"/>
 
-  <arg name="mname3" default="zumy1c"/>
+  <arg name="mname3" default="zumy7b"/>
 
-  <arg name="mname4" default="zumy1d"/>
+  <arg name="mname4" default="zumyBML3"/>
 
-  <arg name="tname1" default="5"/>
+  <arg name="tname1" default="6"/>
 
   <arg name="tname2" default="3"/>
 
-  <arg name="tname3" default="6"/>
+  <arg name="tname3" default="5"/>
 
   <arg name="tname4" default="4"/>
 
@@ -48,12 +48,10 @@
   <node name="wait_for_cmd_$(arg mname3)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname3) $(arg tname3)" output="screen" respawn="true"/>
 
   <node name="wait_for_cmd_$(arg mname4)" pkg="move_zumy" type="wait_for_cmd.py" args="$(arg mname4) $(arg tname4)" output="screen" respawn="true"/>
-
 <!--
   <node name="send_formation" pkg="move_zumy" type="send_formation_test.py" args="$(arg mname1) $(arg mname2) $(arg mname3) $(arg mname4) $(arg tname1) $(arg tname2) $(arg tname3) $(arg tname4)" output="screen" respawn="true"/>
 
 -->
-
 
 
 
