@@ -11,6 +11,8 @@ import get_vel
 import get_vel_2 
 import get_vel_3 as gv
 
+import velocity_formation
+
 #Creat class MoveZumy, all the publishing, subscribing and Service will happen here
 class MoveZumy:
 	def __init__(self, zumy_name, ar_tag_num):
@@ -64,6 +66,27 @@ class MoveZumy:
 			self.position.theta = self.alpha * msg.position.theta +\
 			 					(1-self.alpha) * self.prevPosition.theta
 		#print self.position
+	# def move_main(self, request):
+	# 	if request.Type == 'formation':
+	# 		result = self.move(request)
+	# 	if request.Type == 'unison':
+	# 		result = self.move_unison(request)
+	# 	return result
+
+	# def move_unison(self, request):
+	# 	self.goal = request.goal
+	# 	#print self.name
+	# 	#self.goal_flag = False
+	# 	#self.goalCounter = 0
+		
+	# 	cmd = Twist()	
+	# 	cmd.linear.y = 0
+	# 	cmd.linear.z = 0
+	# 	cmd.angular.x = 0
+	# 	cmd.angular.y = 0
+
+	
+
 
 	def move(self, request):
 
@@ -81,8 +104,20 @@ class MoveZumy:
 		#Creating a new current state based on the information from Haoyu's code		
 		#Plugging the information from Haoyu's code into Vijay's getCmdVel function to calculate v_x and omega_z
 		#while self.goalCounter<5:
-		(vel, self.goal_flag, self.historyNearGoal) = \
-			gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
+		if request.Type == 'formation':
+			(vel, self.goal_flag, self.historyNearGoal) = \
+				gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
+		if request.Type == 'unison':
+			position_unison = {'x':self.position.x,
+								'y':self.position.y,
+								'theta':self.position.theta}
+			goal_unison = {'x':self.goal.x,
+							'y':self.goal.y,
+							'theta':self.goal.theta}
+			(vel, self.goal_flag) = \
+				velocity_formation.getVel(position_unison, goal_unison)
+			self.historyNearGoal = True
+
 
 	#Creating the ability to publish to the zumy
 

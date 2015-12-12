@@ -14,6 +14,8 @@ import collision_checker as cc
 import collision_checker_tests as cct
 import matplotlib.pyplot as plt
 
+import goal_formation
+
 class ZumyPosMonitor:
 	def __init__(self, zumy_name, ar_tag_num):
 		self.name = zumy_name
@@ -23,12 +25,12 @@ class ZumyPosMonitor:
 	def getPos(self, msg):
 		self.position = msg.position
 
-def send_loc_req_stat(zumy_name, goal_position):
+def send_loc_req_stat(zumy_name, goal_position, move_type):
 	service_name = '/'+zumy_name+'/zumy_tracking'
 	rospy.wait_for_service(service_name)
 	try:
 		send_goal_pos = rospy.ServiceProxy(service_name, Mov2LocSrv)
-		goal_reach_flag = send_goal_pos(zumy_name, goal_position)
+		goal_reach_flag = send_goal_pos(zumy_name, goal_position, move_type)
 		return goal_reach_flag.isPosReached
 	except rospy.ServiceException, e:
 		print "Service call failed: %s"%e
@@ -68,7 +70,7 @@ if __name__== '__main__':
 		plt.ion()
 		plt.show()
 	rospy.init_node('send_form')
-	is_in_form = False
+	is_in_form = True
 	is_goal_reached = True
 	myargv = rospy.myargv()
 	infl_radius = 0.05
@@ -95,7 +97,8 @@ if __name__== '__main__':
 		i = i + 1
 
 	predef_formation_command = ['h', 's', 't', 'd', 'v']
-	predef_unison_command = ['f', 'b', 'l', 'r']
+	predef_unison_command = ['i', 'j', 'k', 'l']
+	
 	while True:
 		final_dest_counter = 0
 		formation_command = raw_input("Please input formation command:")
@@ -142,7 +145,7 @@ if __name__== '__main__':
 				# 	infl_radius)
 				for curr_zumy_ID in zumy_ID:
 					move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
-					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID])
+					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID], 'formation')
 					if is_goal_reached:
 						zumy_reach_num = zumy_reach_num + 1
 				print zumy_reach_num
@@ -156,6 +159,42 @@ if __name__== '__main__':
 			if not is_in_form:
 				print("Error! Zumys are not in formation yet!")
 				continue
+			else:
+				predef_unison_command_to_indicator = {'i':'forward', 'j':'left', 'k':'backward', 'l':'right'}
+				indicator = predef_unison_command_to_indicator[formation_command]
+				latest_zumy_pos_unison = {}
+				zumy_destination_unison = {}
+				goal_pos_for_srv_unison = {}
+				for curr_zumy_ID in zumy_ID:
+					latest_zumy_pos_unison[curr_zumy_ID] = {
+												'x':zumy_monitor[curr_zumy_ID].position.x,
+												'y':zumy_monitor[curr_zumy_ID].position.y,
+												'theta':zumy_monitor[curr_zumy_ID].position.theta
+												}
+					zumy_destination_unison[curr_zumy_ID] = goal_formation.decision(
+												indicator,
+												latest_zumy_pos_unison[curr_zumy_ID]
+												)
+					goal_pos_for_srv_unison[curr_zumy_ID] = Pose2D()
+					goal_pos_for_srv_unison[curr_zumy_ID].x = zumy_destination_unison[curr_zumy_ID]['x']
+					goal_pos_for_srv_unison[curr_zumy_ID].y = zumy_destination_unison[curr_zumy_ID]['y']
+					goal_pos_for_srv_unison[curr_zumy_ID].theta = zumy_destination_unison[curr_zumy_ID]['theta']
+				while final_dest_counter<1:
+					zumy_reach_num = 0
+					for curr_zumy_ID in zumy_ID:
+						is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv_unison[curr_zumy_ID], 'unison')
+						if is_goal_reached:
+							zumy_reach_num = zumy_reach_num + 1
+					print zumy_reach_num
+					if zumy_reach_num == zumy_numbers:
+						final_dest_counter = final_dest_counter + 1
+					if not zumy_reach_num == zumy_numbers:
+						final_dest_counter = 0
+
+
+
+
+
 			
 
 

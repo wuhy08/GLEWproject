@@ -1,4 +1,5 @@
 string zumyID
 geometry_msgs/Pose2D goal
+string Type
 ---
 bool isPosReached
