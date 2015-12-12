@@ -5,7 +5,7 @@ import math
 from ar_coord.msg import ZumyCoord
 from geometry_msgs.msg import Twist,Transform,TransformStamped
 from tf2_msgs.msg import TFMessage
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Float32
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
 import get_vel_2 
