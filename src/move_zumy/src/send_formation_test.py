@@ -71,7 +71,7 @@ if __name__== '__main__':
 	is_in_form = False
 	is_goal_reached = True
 	myargv = rospy.myargv()
-	infl_radius = 0.02
+	infl_radius = 0.05
 
 
 	if not len(myargv) in [3,5,7,9]:
@@ -119,7 +119,7 @@ if __name__== '__main__':
 				goal_pos_for_srv[curr_zumy_ID].y = new_final_destination[ii,1]
 				goal_pos_for_srv[curr_zumy_ID].theta = new_final_destination[ii,2]
 				ii = ii + 1
-			while final_dest_counter<5:
+			while final_dest_counter<1:
 				zumy_reach_num = 0
 				for curr_zumy_ID in zumy_ID:
 					latest_zumy_pos_cc[curr_zumy_ID] = cc.Point2D(zumy_monitor[curr_zumy_ID].position.x,

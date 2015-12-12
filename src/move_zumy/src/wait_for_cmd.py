@@ -92,7 +92,7 @@ class MoveZumy:
 			cmd.angular.z = vel['ang_z']
 			cmd.linear.x = vel['lin_x']
 			#self.goalCounter = 0
-		if self.goal_flag and self.moveEnable:
+		if self.goal_flag:
 			cmd.angular.z = 0
 			cmd.linear.x = 0
 			self.historyNearGoal = False
@@ -104,6 +104,7 @@ class MoveZumy:
 
 		#Publish new velocity information to the zumy
 		self.vel_pub.publish(cmd)
+		print self.historyNearGoal
 		#print cmd.linear.x
 		#print cmd.angular.z
 		self.rate.sleep()

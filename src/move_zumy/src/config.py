@@ -1,8 +1,8 @@
 import math
 sim_tim_scale = 0.05 	# should be seconds
-turnInPlaceThresh = 30 	# if robot's heading is this many degrees or more from desired heading, just turn
-maxFwdSpd  = .18			# max acceptable absolute value for linear.x
-maxTurnSpd = .2			# max acceptable absolute value for angular.z	
+turnInPlaceThresh = 15 	# if robot's heading is this many degrees or more from desired heading, just turn
+maxFwdSpd  = .12			# max acceptable absolute value for linear.x
+maxTurnSpd = .16			# max acceptable absolute value for angular.z	
 distThresh	= 0.05		# when we are this close to the target point (in the new coordinate frame), then turn and fix orientation to goal['theta']
 distThreshHigh = 0.15
 finalHeadingThresh = 5  # when we are this many degrees away from the target orientation, stop moving.
