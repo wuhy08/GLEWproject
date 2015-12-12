@@ -116,7 +116,6 @@ def getCmdVel(state, goal, name, isPreviousNearGoal):
 	# isPreviousNearGoal is an input from Haoyu's code.  It is assigned based on the return value of nearGoalPt below.
 	# and lets us know if the Zumy had previously gotten close to the goal (so we are in an orientation fixing state).
 	# is_goal_reached is an output flag that lets the client know that the Zumy has reached the goal.
-	lookAheadPtDist = 0.2 # distance to next target point for control algorithm
 	del_x_world = goal.x - state.x
 	del_y_world	= goal.y - state.y
 
@@ -124,7 +123,7 @@ def getCmdVel(state, goal, name, isPreviousNearGoal):
 	# Addition of (not isPreviousNearGoal) is to prevent instability by forcing the Zumy to only fix orientation
 	# once it has gotten close to the goal for the first time.
 	if(e_dist(del_x_world, del_y_world) > config.distThresh and (not isPreviousNearGoal)):
-		cmd_vel = goToIntermediatePoint(state,goal, lookAheadPtDist, name)
+		cmd_vel = goToIntermediatePoint(state,goal, config.lookAheadPtDist, name)
 		is_goal_reached = False # We have not reached the goal yet.
 		nearGoalPt = False # Let the client know we haven't yet gotten close to the goal.
 	else:
