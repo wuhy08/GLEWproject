@@ -391,7 +391,7 @@ def check_zumy_static_collision(zumy_pose_list, infl_robot_radius):
 		zumy_BBox_List.append(getBoundingBox(path_vector, infl_robot_radius, False))
 	print "Here"
 	for rbt_i in range(0, len(zumy_BBox_List)):
-		for rbt_j in range(rbt_i, len(zumy_BBox_List)):
+		for rbt_j in range(rbt_i+1, len(zumy_BBox_List)):
 			# Iterate through every unique pairing of robots in the list.
 			if zumy_BBox_List[rbt_i].isRectIntersection(zumy_BBox_List[rbt_j]):
 				return (zumy_BBox_List, True)
