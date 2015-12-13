@@ -300,6 +300,46 @@ def getBoundingBox(path_vector, infl_robot_radius, isMoving):
 #******************************************************#
 #***** End of collision checking helper function. *****#
 
+#***** Obstacle bounding box helper function for A* case with obstacles in environment ***********************#
+#*************************************************************************************************************#
+def getObsBoundingBox(path_vector, width):
+	corner1 = Point2D(0,0)
+	corner2 = Point2D(0,0)
+	corner3 = Point2D(0,0)
+	corner4 = Point2D(0,0)
+	perp1, perp2 = path_vector.getPerpVectors(width/2.0)
+
+	pv_del_x = path_vector.point2.x  -path_vector.point1.x
+	pv_del_y = path_vector.point2.y  -path_vector.point1.y
+
+	# Path_vector.point1 is the start point of the vector linking
+	# one edge of the rectangle to the other edge of the rectangle
+	# Both path_vector.point1 and path_vector.point2 bisect the side
+	# they are on, so need to find the corners of those sides.	
+	# We add the scaled perpendicular vectors (which start at (0,0))
+	# to find corner 1 and corner 2 near the start point (point1).
+	corner1.x = path_vector.point1.x + perp1.point2.x
+	corner1.y = path_vector.point1.y + perp1.point2.y
+	corner2.x = path_vector.point1.x + perp2.point2.x
+	corner2.y = path_vector.point1.y + perp2.point2.y
+
+	# Corner 3 and Corner 4 are analogous to corner 1 and corner 2
+	# but are near the end point of the path_vector.
+	# Thus, we can simply translate by the path_vector to find
+	# corner 3 and corner 4.
+	corner3.x = corner1.x + pv_del_x
+	corner3.y = corner1.y + pv_del_y
+	corner4.x = corner2.x + pv_del_x
+	corner4.y = corner2.y + pv_del_y
+		
+	side1 = Vector2D(corner1, corner3)
+	side2 = Vector2D(corner3, corner4)
+	side3 = Vector2D(corner4, corner2)
+	side4 = Vector2D(corner2, corner1)
+	return(Rectangle2D(side1, side2, side3, side4))
+#******************************************************#
+#***** End of obstacle bounding box function. *****#
+
 #***** Main functions that will be called by clients as a "traffic controller" for Zumys *****#
 #********************************************************************************************#
 def command_four_zumys(zumy1_start, zumy1_goal, zumy2_start, zumy2_goal, zumy3_start, zumy3_goal, zumy4_start, zumy4_goal):
@@ -404,6 +444,80 @@ class Zumy_Pose:
 		self.thetad = float(thetad)
 		self.thetar = self.thetad * math.pi/180.0
 		# theta should be in radians, maybe can add a check for this when used.
+
+class Obstacle:
+	def __init__(self, x, y, thetad, width ,length):
+		self.x = float(x)
+		self.y = float(y)
+		self.thetad = float(thetad)
+		self.thetar = self.thetad * math.pi/180.0
+		# theta should be in radians, maybe can add a check for this when used.
+
+		self.width = width
+		self.length = length
+		print self.width
+		print self.length
+		print ""
+		# length = dist of rectangle along its heading
+		# width = dist of rectangle perpendicular to its heading
+
+
+def create_obstacle_bb_list(obstacle_list):
+	obs_BBox_List = []
+	for obs in obstacle_list:
+		if not isinstance(obs, Obstacle):
+			print "Error: First input should be a list of Zumy_Pose classes"
+			raise TypeError
+
+		pv_endx = obs.x + obs.length/2.0 * math.cos(obs.thetar)
+		pv_endy = obs.y + obs.length/2.0 * math.sin(obs.thetar)
+		pv_stx  = obs.x - obs.length/2.0 * math.cos(obs.thetar)
+		pv_sty  = obs.y - obs.length/2.0 * math.sin(obs.thetar)
+
+		path_vector = Vector2D(Point2D(pv_stx, pv_sty), Point2D(pv_endx, pv_endy))
+
+		# Enclose entire path vector.
+		obs_BBox_List.append(getObsBoundingBox(path_vector, obs.width))
+	return obs_BBox_List
+
+def check_zumy_obstacle_collision(zumy_pose, infl_robot_radius, lin_buffer_dist, obstacle_bb_list):
+	if not isinstance(zumy_pose, Zumy_Pose):
+		print "Error: First input should be a list of Zumy_Pose classes"
+		raise TypeError
+
+	if(lin_buffer_dist > 0.0):
+		# Construct path vector with some delta in front and delta in back for the bounding box.
+		# Note that bounding box will assume that the path_vector represents the CENTER of the Zumy
+		# so the length of the bounding_box will be 2(lin_buffer_dist + infl_robot_radius)!
+		pv_endx = zumy_pose.x+lin_buffer_dist*math.cos(zumy_pose.thetar)
+		pv_endy = zumy_pose.y+lin_buffer_dist*math.sin(zumy_pose.thetar)
+		pv_stx = zumy_pose.x-lin_buffer_dist*math.cos(zumy_pose.thetar)
+		pv_sty = zumy_pose.y-lin_buffer_dist*math.sin(zumy_pose.thetar)
+	else:
+		# Construct a unit vector to encode robot's position and heading.  Bounding box just circumscribes
+		# robot's current position. Length is 2*(infl_robot_radius)
+		pv_endx = zumy_pose.x+math.cos(zumy_pose.thetar)
+		pv_endy = zumy_pose.y+math.sin(zumy_pose.thetar)
+		pv_stx = zumy_pose.x
+		pv_sty = zumy_pose.y
+		
+	path_vector = Vector2D(Point2D(pv_stx, pv_sty), Point2D(pv_endx, pv_endy))
+	if(lin_buffer_dist > 0.0):
+		# Enclose entire path vector.
+		zumy_bbox = getBoundingBox(path_vector, infl_robot_radius, True)
+	else:			
+		# Only enclose robot's current position with a square.
+		zumy_bbox = getBoundingBox(path_vector, infl_robot_radius, False)
+
+	for obs_rect in obstacle_bb_list:
+		if not isinstance(obs_rect, Rectangle2D):
+			print "Make sure the last input is a list of Rectangle2Ds representing the obstacle!"
+			raise TypeError
+		if zumy_bbox.isRectIntersection(obs_rect):
+			return (True, zumy_bbox)
+
+	return (False, zumy_bbox)
+		
 
 def check_zumy_static_collision(zumy_pose_list, infl_robot_radius, lin_buffer_dist):
 	zumy_BBox_List = []
