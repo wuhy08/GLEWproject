@@ -405,52 +405,75 @@ class Zumy_Pose:
 		self.thetar = self.thetad * math.pi/180.0
 		# theta should be in radians, maybe can add a check for this when used.
 
-def check_zumy_static_collision(zumy_pose_list, infl_robot_radius, lin_buffer_dist):
+	def __eq__(self, pose):
+		return self.x == pose.x and self.y == pose.y and self.thetad == pose.thetad and self.thetar == pose.thetar
+
+
+def create_BBox(zumy_pose, infl_robot_radius, lin_buffer_dist):
+
+	bbox = None
+
+	if(lin_buffer_dist > 0.0):
+		# Construct path vector with some delta in front and delta in back for the bounding box.
+		pv_endx = rbt.x+lin_buffer_dist*math.cos(rbt.thetar)
+		pv_endy = rbt.y+lin_buffer_dist*math.sin(rbt.thetar)
+		pv_stx = rbt.x-lin_buffer_dist*math.cos(rbt.thetar)
+		pv_sty = rbt.y-lin_buffer_dist*math.sin(rbt.thetar)
+	else:
+		# Construct a unit vector to encode robot's position and heading.  Bounding box just circumscribes
+		# robot's current position.
+		pv_endx = rbt.x+math.cos(rbt.thetar)
+		pv_endy = rbt.y+math.sin(rbt.thetar)
+		pv_stx = rbt.x
+		pv_sty = rbt.y
+		
+	
+	path_vector = Vector2D(Point2D(pv_stx, pv_sty), Point2D(pv_endx, pv_endy))
+
+	if(lin_buffer_dist > 0.0):
+		# Enclose entire path vector.
+		bbox = getBoundingBox(path_vector, infl_robot_radius, True)
+	else:			
+		# Only enclose robot's current position with a square.
+		bbox = getBoundingBox(path_vector, infl_robot_radius, False)
+
+	return bbox
+
+	
+def check_zumy_static_collision(zumy_pose, zumy_pose_list, infl_robot_radius, lin_buffer_dist):
+	# zumy_collision_dict = dict()
+
+	zumy_BBox = create_BBox(zumy_pose, infl_robot_radius, lin_buffer_dist)
+
 	zumy_BBox_List = []
 	zumy_Permission_List = []
-	for rbt in zumy_pose_list:
+
+	index_in_list = -1
+
+	for rbt, i in zip(zumy_pose_list, range(len(zumy_pose_list)):
+		if rbt == zumy_pose:
+			index_in_list = i
+			continue
+
 		if not isinstance(rbt, Zumy_Pose):
 			print "Error: First input should be a list of Zumy_Pose classes"
 			raise TypeError
-		
-		if(lin_buffer_dist > 0.0):
-			# Construct path vector with some delta in front and delta in back for the bounding box.
-			pv_endx = rbt.x+lin_buffer_dist*math.cos(rbt.thetar)
-			pv_endy = rbt.y+lin_buffer_dist*math.sin(rbt.thetar)
-			pv_stx = rbt.x-lin_buffer_dist*math.cos(rbt.thetar)
-			pv_sty = rbt.y-lin_buffer_dist*math.sin(rbt.thetar)
-		else:
-			# Construct a unit vector to encode robot's position and heading.  Bounding box just circumscribes
-			# robot's current position.
-			pv_endx = rbt.x+math.cos(rbt.thetar)
-			pv_endy = rbt.y+math.sin(rbt.thetar)
-			pv_stx = rbt.x
-			pv_sty = rbt.y
-			
-		
-		path_vector = Vector2D(Point2D(pv_stx, pv_sty), Point2D(pv_endx, pv_endy))
 
-		if(lin_buffer_dist > 0.0):
-			# Enclose entire path vector.
-			zumy_BBox_List.append(getBoundingBox(path_vector, infl_robot_radius, True))
-		else:			
-			# Only enclose robot's current position with a square.
-			zumy_BBox_List.append(getBoundingBox(path_vector, infl_robot_radius, False))
+		zumy_BBox_List.append(create_BBox(rbt, infl_robot_radius, lin_buffer_dist))
 
-	for rbt_i in range(0, len(zumy_BBox_List)):
-		isCollision = False
-		#loopCount = 0
-		for rbt_j in range(0, len(zumy_BBox_List)):
-			if (zumy_BBox_List[rbt_i].isEqualRect(zumy_BBox_List[rbt_j])):
-				print_debug("match")
-				print_debug(rbt_i)
-				print_debug(rbt_j)
-				print_debug("match_end")
-				continue
-			# Iterate through every unique pairing of robots in the list.
-			if (zumy_BBox_List[rbt_i].isRectIntersection(zumy_BBox_List[rbt_j])):
-				isCollision = True
-			#loopCount = loopCount + 1
-		zumy_Permission_List.append(isCollision)
-		#print_debug(loopCount)		
-	return (zumy_BBox_List, zumy_Permission_List)
+	for rbt_j in range(0, len(zumy_BBox_List)):
+		if rbt_j == index_in_list:
+			continue
+
+		if (zumy_BBox.isEqualRect(zumy_BBox_List[rbt_j])):
+			print_debug("match")
+			print_debug(rbt_i)
+			print_debug(rbt_j)
+			print_debug("match_end")
+			continue
+		# Iterate through every unique pairing of robots in the list.
+		if (zumy_BBox.isRectIntersection(zumy_BBox_List[rbt_j])):
+			return True
+
+	return False
+
