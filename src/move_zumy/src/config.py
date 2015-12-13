@@ -2,7 +2,7 @@
 sim_tim_scale = 0.05 	# should be seconds
 
 # Goal checking thresholds
-distThresh	= 0.01		# when we are this close to the target point (in the new coordinate frame), then turn and fix orientation to goal
+distThresh	= 0.05		# when we are this close to the target point (in the new coordinate frame), then turn and fix orientation to goal
 distThreshHigh = 0.15	# variable for hysteresis (once distThresh has been met, just check if we are within distThreshHigh thereafter)
 finalHeadingThresh = 5  # when we are this many degrees away from the target orientation, stop moving.
 

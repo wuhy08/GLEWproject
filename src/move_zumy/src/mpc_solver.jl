@@ -3,7 +3,6 @@
 using RobotOS
 
 @rosimport move_zumy.srv: MPCSolver
-@rosimport geometry.msgs: Pose2D
 
 rostypegen()
 using move_zumy.srv

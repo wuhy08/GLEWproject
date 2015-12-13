@@ -100,23 +100,6 @@ def plot_n_bounding_boxes(rects, vlist, radius):
 	plt.axis('equal')
 	plt.draw()	
 
-def plot_n_obstacles(rects, vlist):
-	plt.clf()
-	for rect in rects:
-		for v in (rect.side1, rect.side2, rect.side3, rect.side4):
-			plt.plot([v.point1.x, v.point2.x], [v.point1.y, v.point2.y], color='k', linewidth=2.0)
-			plt.plot([v.point1.x], [v.point1.y], 'o', mec = 'k', mfc = 'k', ms = 5)
-			plt.plot([v.point2.x], [v.point2.y], 'o',  mec = 'k', mfc = 'k', ms = 5)
-
-	for v in vlist:
-		plt.plot([v.point1.x, v.point2.x], [v.point1.y, v.point2.y], color='b', linewidth=2.0)
-		plt.plot([v.point1.x], [v.point1.y], 'o', mec = 'r', mfc = 'r', ms = 5)
-		plt.plot([v.point2.x], [v.point2.y], 'o',  mec = 'g', mfc = 'g', ms = 5)
-
-	plt.axis('equal')
-	plt.draw()	
-	
-
 
 def plot_bounding_boxes(rects, v1, v2, v3, v4, radius):
 	plt.clf()
@@ -347,7 +330,6 @@ if __name__=='__main__':
 	#	plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
 	#	time.sleep(1)
 
-	#************ Zumy static collision tests (for A*) ****************#
 	z1 = cc.Zumy_Pose(v1.point1.x, v1.point1.y, 45)
 	z2 = cc.Zumy_Pose(v2.point1.x, v2.point1.y, 90)
 	z3 = cc.Zumy_Pose(v3.point1.x, v3.point1.y, 90)
@@ -355,11 +337,11 @@ if __name__=='__main__':
 	z4 = cc.Zumy_Pose(v4.point1.x, v4.point1.y, theta4d)
 	collision_res = cc.check_zumy_static_collision([z1, z2, z3, z4], 0.125, 0.5)
 	print collision_res[1]
-	#if(run_plot > 0):
-	#	vector_list = [cc.Vector2D(cc.Point2D(z1.x, z1.y),cc.Point2D(z1.x, z1.y)), cc.Vector2D(cc.Point2D(z2.x, z2.y),cc.Point2D(z2.x, z2.y)),\
-	#				   cc.Vector2D(cc.Point2D(z3.x, z3.y),cc.Point2D(z3.x, z3.y)), cc.Vector2D(cc.Point2D(z4.x, z4.y), cc.Point2D(z4.x, z4.y))]
-	#	plot_n_bounding_boxes(collision_res[0], vector_list, 0.125)
-	#	time.sleep(5)
+	if(run_plot > 0):
+		vector_list = [cc.Vector2D(cc.Point2D(z1.x, z1.y),cc.Point2D(z1.x, z1.y)), cc.Vector2D(cc.Point2D(z2.x, z2.y),cc.Point2D(z2.x, z2.y)),\
+					   cc.Vector2D(cc.Point2D(z3.x, z3.y),cc.Point2D(z3.x, z3.y)), cc.Vector2D(cc.Point2D(z4.x, z4.y), cc.Point2D(z4.x, z4.y))]
+		plot_n_bounding_boxes(collision_res[0], vector_list, 0.125)
+		time.sleep(5)
 
 	z1 = cc.Zumy_Pose(v1.point1.x, v1.point1.y, 45)
 	z2 = cc.Zumy_Pose(v1.point1.x+0.06, v1.point1.y+0.01, 90)
@@ -368,46 +350,11 @@ if __name__=='__main__':
 	z4 = cc.Zumy_Pose(v4.point1.x, v4.point1.y, theta4d)
 	collision_res = cc.check_zumy_static_collision([z1, z2, z3, z4], 0.125, 0.5)
 	print collision_res[1]
-	#if(run_plot > 0):
-	#	vector_list = [cc.Vector2D(cc.Point2D(z1.x, z1.y),cc.Point2D(z1.x, z1.y)), cc.Vector2D(cc.Point2D(z2.x, z2.y),cc.Point2D(z2.x, z2.y)),\
-	#				   cc.Vector2D(cc.Point2D(z3.x, z3.y),cc.Point2D(z3.x, z3.y)), cc.Vector2D(cc.Point2D(z4.x, z4.y), cc.Point2D(z4.x, z4.y))]
-	#	plot_n_bounding_boxes(collision_res[0], vector_list, 0.125)
-	#	time.sleep(5)
-
-	#************* Obstacle code tests********** #
-	# x,y,thetad, width, length (length is aligned with theta, width is perpendicular to theta heading)
-	obs1 = cc.Obstacle(0.1, 0.3, 0, 0.1, 0.8)
-	obs2 = cc.Obstacle(0.1, 0.3, 60, 0.1, 0.8)
-	obs3 = cc.Obstacle(0.5, 0.5, -175, 0.05, 0.2)
-	obs4 = cc.Obstacle(0.5, 0.5, 87, 0.05, 0.2)
-	obs5 = cc.Obstacle(2.0, -.1, 90, 0.5, 0.5)
-	obs6 = cc.Obstacle(2.0, -.1, 90, 0.3, 0.5)
-	obs_list = [obs1, obs2, obs3, obs4, obs5, obs6]
-	obs_bounding_boxes = cc.create_obstacle_bb_list(obs_list)
-	vector_list = []
-	for obs in obs_list:
-		vector_list.append( cc.Vector2D(cc.Point2D(obs.x, obs.y),cc.Point2D(obs.x, obs.y)) )
-	#if(run_plot > 0):
-	#	plot_n_obstacles(obs_bounding_boxes, vector_list) 
-	#	time.sleep(1)
-
-	#******** Zumy/obstacle collision check ********** #
-	z1 = cc.Zumy_Pose(v1.point1.x, v1.point1.y, 45)
-	z2 = cc.Zumy_Pose(v1.point1.x+0.06, v1.point1.y+0.01, 90)
-	z3 = cc.Zumy_Pose(v3.point1.x, v3.point1.y, 90)
-	theta4d = math.atan2(v4.point2.y-v4.point1.y, v4.point2.x-v4.point1.x)*180.0/math.pi
-	z4 = cc.Zumy_Pose(v4.point1.x, v4.point1.y, theta4d)
-	for zumy_pose in [z1, z2, z3, z4]:
-		rect_list = []
-		collision_result =  cc.check_zumy_obstacle_collision(zumy_pose, 0.125, 0.25, obs_bounding_boxes)
-		rect_list.append(collision_result[1])
-		for obs_bb in obs_bounding_boxes:
-			rect_list.append(obs_bb)
-		if(run_plot > 0):
-			print collision_result[0]
-			plot_n_obstacles(rect_list, \
-							 [cc.Vector2D(cc.Point2D(zumy_pose.x, zumy_pose.y), cc.Point2D(zumy_pose.x, zumy_pose.y))])
-			time.sleep(5)
+	if(run_plot > 0):
+		vector_list = [cc.Vector2D(cc.Point2D(z1.x, z1.y),cc.Point2D(z1.x, z1.y)), cc.Vector2D(cc.Point2D(z2.x, z2.y),cc.Point2D(z2.x, z2.y)),\
+					   cc.Vector2D(cc.Point2D(z3.x, z3.y),cc.Point2D(z3.x, z3.y)), cc.Vector2D(cc.Point2D(z4.x, z4.y), cc.Point2D(z4.x, z4.y))]
+		plot_n_bounding_boxes(collision_res[0], vector_list, 0.125)
+		time.sleep(5)
 
 #   Failing rectangle case (can uncomment if you like)
 	#v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,2))
