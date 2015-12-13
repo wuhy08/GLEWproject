@@ -1,8 +1,10 @@
-using Base.Collections
+# using Base.Collections
 
-using DataStructures
+# using DataStructures
 using GeometricalPredicates
 using AutoHashEquals
+
+using Base.Collections
 
 
 # Plant
@@ -85,7 +87,7 @@ function is_legal(width, height, obstacles::Vector{Obstacle}, point::PlainPoint)
     # TODO: Remove this safety distance.
 
     # safety spacing
-    spacing = 1
+    spacing = 4
     if point.x < 1 || point.x >= width
         return false
     end
@@ -126,7 +128,6 @@ function point_successor(obstacles::Vector{Obstacle}, width, height, current_poi
     actions = PlainPoint[]
     costs = Float64[]
 
-    # Jason: What does this line do? with the ->?
     add_succ = (p, step_cost) -> add_successor_if_possible!(width, height,
                                                             successor_states, actions,
                                                             costs, obstacles,
@@ -164,7 +165,8 @@ end
 
 # TODO: Make fringe universal instead of PriorityQueue
 function universal_search(goal_f, successor_f, eval_f, start_node,
-                             fringe, closed)
+                          fringe, closed)
+    println("SDFSDFSDFSD");
     enqueue!(fringe, start_node, eval_f(start_node))
 
     while !isempty(fringe)
@@ -211,7 +213,6 @@ end
 
 
 # Convert the discrete points into the middle of the squares
-# Jason - need to see this visually I think.
 function convert_to_continuous(square_dimension, points::Vector{PlainPoint})
     f = p -> (p.x*square_dimension + square_dimension/2.0,
               p.y*square_dimension + square_dimension/2.0)

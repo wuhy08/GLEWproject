@@ -12,7 +12,6 @@ function path_d2c(xs, ys, v_desired, n_horizon, td, current_x, current_y)
 
     end_index = 1
     # first figure out how many of the A* steps are needed
-    # Jason - why wouldn't the number of steps always be equal to the length of xs? doesn't A* stop at the goal?
     for i = 1:length(xs)
         x = xs[i]
         y = ys[i]
@@ -24,12 +23,13 @@ function path_d2c(xs, ys, v_desired, n_horizon, td, current_x, current_y)
         end
         end_index = i
     end
-#     println("end_index: ", end_index)
+    println("end_index: ", end_index)
     xs_interpolated = Float64[]
     ys_interpolated = Float64[]
 
     # interpolate the current_x, current_y to the first A* point
     num_steps = (sqrt((xs[1] - current_x)^2.0 + (ys[1] - current_y)^2.0)/v_desired) / td
+    println("num_steps: $(num_steps)");
     x_slope = (xs[1] - current_x)/(num_steps)
     y_slope = (ys[1] - current_y)/(num_steps)
 
@@ -63,8 +63,8 @@ function path_d2c(xs, ys, v_desired, n_horizon, td, current_x, current_y)
         n = (n_horizon + 1) - length(xs_interpolated)
         xs = xs_interpolated
         ys = ys_interpolated
-        append!(xs, ones(n) * xs_interpolated[end])
-        append!(ys, ones(n) * ys_interpolated[end])
+        # append!(xs, ones(n) * xs_interpolated[end])
+        # append!(ys, ones(n) * ys_interpolated[end])
     else
         xs = xs_interpolated[1:n_horizon+1]
         ys = ys_interpolated[1:n_horizon+1]

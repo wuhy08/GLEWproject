@@ -37,6 +37,9 @@ def goToIntermediatePoint(state, goal, lookAheadPtDist, name):
 	elif del_heading < -180:
 		del_heading = del_heading + 360
 	print_debug('%s: del_heading = %f' % (name, del_heading))
+	print_debug('%s: desired_heading = %f' % (name, desired_heading))
+        
+        # time.sleep(1000000000)
 
 	# Motor commands issued here.  Check if we need to turn first.
 	if abs(del_heading) > config.turnInPlaceThresh:
@@ -117,20 +120,26 @@ def getCmdVel(state, goal, name, isPreviousNearGoal):
 	# and lets us know if the Zumy had previously gotten close to the goal (so we are in an orientation fixing state).
 	# is_goal_reached is an output flag that lets the client know that the Zumy has reached the goal.
 	del_x_world = goal.x - state.x
-	del_y_world	= goal.y - state.y
+	del_y_world = goal.y - state.y
 
 	# Go to intermediate point if we are far from the goal and haven't yet previously reached the goal.
 	# Addition of (not isPreviousNearGoal) is to prevent instability by forcing the Zumy to only fix orientation
 	# once it has gotten close to the goal for the first time.
-	if(e_dist(del_x_world, del_y_world) > config.distThresh and (not isPreviousNearGoal)):
-		cmd_vel = goToIntermediatePoint(state,goal, config.lookAheadPtDist, name)
-		is_goal_reached = False # We have not reached the goal yet.
-		nearGoalPt = False # Let the client know we haven't yet gotten close to the goal.
-	else:
-		nearGoalPt = True # Let the client know that we have gotten close to the goal.  This output is
-						  # used to inform the client we are in an orientation fixing state.	
-		# Either output a twist command or let the client know we reached the goal
-		(cmd_vel, is_goal_reached) = fixFinalHeading(state,goal,name) 
+
+        cmd_vel = goToIntermediatePoint(state,goal, config.lookAheadPtDist, name)
+        is_goal_reached = False # We have not reached the goal yet.
+        nearGoalPt = False # Let the client know we haven't yet gotten close to the goal.
+
+
+	# if(e_dist(del_x_world, del_y_world) > config.distThresh and (not isPreviousNearGoal)):
+	# 	cmd_vel = goToIntermediatePoint(state,goal, config.lookAheadPtDist, name)
+	# 	is_goal_reached = False # We have not reached the goal yet.
+	# 	nearGoalPt = False # Let the client know we haven't yet gotten close to the goal.
+	# else:
+	# 	nearGoalPt = True # Let the client know that we have gotten close to the goal.  This output is
+	# 					  # used to inform the client we are in an orientation fixing state.	
+	# 	# Either output a twist command or let the client know we reached the goal
+	# 	(cmd_vel, is_goal_reached) = fixFinalHeading(state,goal,name) 
 
 	return (cmd_vel, is_goal_reached, nearGoalPt)
 

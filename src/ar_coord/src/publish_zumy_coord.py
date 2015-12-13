@@ -95,7 +95,8 @@ if __name__=='__main__':
 
                 #print trans[curr_ar_tag]
             except (tf.LookupException, tf.Exception):
-                print 'Cannot get TF in '+curr_ar_tag
+                pass
+                # print 'Cannot get TF in '+curr_ar_tag
         if ar_x in trans and ar_y in trans:
             base_coord_x = np.array(trans[ar_x])
             #print "x"
