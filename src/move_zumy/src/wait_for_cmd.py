@@ -9,7 +9,8 @@ from std_msgs.msg import Bool, Float32
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
 import get_vel_2 
-import get_vel_3 as gv
+import get_vel_3
+import get_vel_4 as gv 
 
 import velocity_formation
 
@@ -114,9 +115,10 @@ class MoveZumy:
 		#Creating a new current state based on the information from Haoyu's code		
 		#Plugging the information from Haoyu's code into Vijay's getCmdVel function to calculate v_x and omega_z
 		#while self.goalCounter<5:
+						#gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
 		if request.Type == 'formation':
 			(vel, self.goal_flag, self.historyNearGoal) = \
-				gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
+				gv.getCmdVelFeedback(self.position, self.goal, self.name, self.trans_vel, self.rot_vel, self.historyNearGoal)
 		if request.Type == 'unison':
 			position_unison = {'x':self.position.x,
 								'y':self.position.y,

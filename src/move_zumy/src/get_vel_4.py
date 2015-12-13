@@ -47,6 +47,9 @@ def goToIntermediatePoint(state, goal, lookAheadPtDist, name, current_lin_x, cur
 			lin_x = 0
 			ang_z = -config.maxTurnSpd
 			print_debug('%s: Turning - to reach intermediate point' % name)
+		
+		max_fwd_speed = config.maxFwdSpd
+		max_turn_speed = config.maxTurnSpd
 	else:
 		# Drive and turn at the same time.  Linear velocity scales with the amount of the distance along the robot's x-axis.
 		# Angular velocity scales with the amount of the distance along the robot's y-axis (that we can't cover without turning).
@@ -55,7 +58,7 @@ def goToIntermediatePoint(state, goal, lookAheadPtDist, name, current_lin_x, cur
 		# Convert global world to local robot coordinates.
 		del_x_robot = del_x_world * math.cos(theta_rad) + del_y_world * math.sin(theta_rad)
 		del_y_robot = -del_x_world * math.sin(theta_rad) + del_y_world * math.cos(theta_rad)
-	
+
 		# Motor commands
 		if(slow_down):
 			max_fwd_speed = config.slowFwdSpd
