@@ -1,0 +1,5 @@
+geometry_msgs/Pose2D[] zumy_pos
+geometry_msgs/Pose2D zumy_start
+geometry_msgs/Pose2D zumy_goal
+---
+geometry_msgs/Pose2D[] path

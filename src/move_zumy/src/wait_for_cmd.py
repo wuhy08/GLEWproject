@@ -9,12 +9,16 @@ from std_msgs.msg import Bool, Float32
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
 import get_vel_2 
-import get_vel_3 as gv
+# import get_vel_3 as gv
+import get_vel_astar as gv
 
 import velocity_formation
 
 from move_zumy.srv import AStarSolver
 from geometry_msgs.msg import Pose2D
+
+
+import matplotlib.pyplot as plt
 
 #Creat class MoveZumy, all the publishing, subscribing and Service will happen here
 class MoveZumy:
@@ -47,8 +51,11 @@ class MoveZumy:
 		self.vel_pub = rospy.Publisher('/%s/cmd_vel' % self.name, Twist, queue_size=2)
 		#The service will receive position request from clients
 		rospy.Service('/'+self.name+'/zumy_tracking', Mov2LocSrv, self.move)
-                self.astar = rospy.ServiceProxy('astar_solver', AStarSolver, persistent=True)
+                self.astar = rospy.ServiceProxy('astar_solver', AStarSolver)
 		print self.name+' is alive'
+
+                plt.ion()
+                plt.show()
 
 	#updatePermission will be called to update moveEnable whenever a new message is received from the topic
 	def updatePermission(self, msg):
@@ -99,12 +106,14 @@ class MoveZumy:
 	# 	cmd.angular.x = 0
 	# 	cmd.angular.y = 0
 
-	
-
 
 	def move(self, request):
+                rospy.wait_for_service('astar_solver')
 
 		self.goal = request.goal
+
+                self.goal = Pose2D(0.05, 0.53, 0.0)
+
 		#print self.name
 		#self.goal_flag = False
 		#self.goalCounter = 0
@@ -115,7 +124,9 @@ class MoveZumy:
 		cmd.angular.x = 0
 		cmd.angular.y = 0
 
-                obstacle1 = Pose2D(30.0, 2.0, 0.0)
+                obstacle1 = Pose2D(0.47, 0.48, 0.0)
+
+                print 'self.position', self.position
 
 		#Creating a new current state based on the information from Haoyu's code		
 		#Plugging the information from Haoyu's code into Vijay's getCmdVel function to calculate v_x and omega_z
@@ -123,12 +134,27 @@ class MoveZumy:
 		if request.Type == 'formation':
                         # start_point = 
                         # goal_point = Pose2D(self.goal.x, self.goal.y, self.goal.theta)
-                        
-                        intermediate_goal = self.astar([obstacle1], self.position, self.goal)
 
-			(vel, self.goal_flag, self.historyNearGoal) = \
-				# gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
-				gv.getCmdVel(self.position, intermediate_goal, self.name, self.historyNearGoal)
+                        print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
+
+                        response = self.astar([], self.position, self.goal)
+                        path = response.path
+
+                        xs = list(map(lambda p: p.x, path))
+                        ys = list(map(lambda p: p.y, path))
+
+                        # ax1 = fig.add_subplot(111, aspect='equal')
+
+                        plt.clf()
+                        plt.plot(xs, ys, 'ro')
+                        plt.draw()
+
+                        # intermediate_goal = self.astar([obstacle1], self.position, self.goal)
+
+                        print 'INTERMEDIATE GOAL@@@@@@@@@'
+                        print path[0]
+
+			(vel, self.goal_flag, self.historyNearGoal) = gv.getCmdVel(self.position, path[0], self.name, self.historyNearGoal)
 
 
                         
