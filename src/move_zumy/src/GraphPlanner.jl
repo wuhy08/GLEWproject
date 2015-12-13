@@ -86,13 +86,15 @@ end
 function is_legal(width, height, obstacles::Vector{Obstacle}, point::PlainPoint)
     # TODO: Remove this safety distance.
 
+    boundary_space = 10
+
     # safety spacing
     spacing = 4
-    if point.x < 1 || point.x >= width
+    if point.x < -boundary_space || point.x >= width + boundary_space
         return false
     end
 
-    if point.y < 1 || point.y >= height
+    if point.y < -boundary_space || point.y >= height + boundary_space
         return false
     end
 

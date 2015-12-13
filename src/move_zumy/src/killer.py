@@ -25,10 +25,10 @@ if __name__=='__main__':
 	cmd.angular.y = 0
 	cmd.angular.z = 0
 	
-	rate = rospy.Rate(1000)
+	rate = rospy.Rate(100)
 
         i = 0
-	while i < 45:
+	while i<300:
                 i = i + 1
 		zumy_vel1.publish(cmd)
 		# zumy_vel2.publish(cmd)

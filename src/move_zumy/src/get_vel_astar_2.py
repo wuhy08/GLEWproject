@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import time
 from geometry_msgs.msg import Pose2D
 
-from move_zumy.srv import MPCSolver
-
 DEBUG = True
 def print_debug(s):
 	if DEBUG:
@@ -40,8 +38,7 @@ def goToIntermediatePoint(state, goal, lookAheadPtDist, name):
 		del_heading = del_heading + 360
 	print_debug('%s: del_heading = %f' % (name, del_heading))
 	print_debug('%s: desired_heading = %f' % (name, desired_heading))
-        
-        # time.sleep(1000000000)
+	# time.sleep(1000000000)
 
 	# Motor commands issued here.  Check if we need to turn first.
 	if abs(del_heading) > config.turnInPlaceThresh:
@@ -81,6 +78,7 @@ def goToIntermediatePoint(state, goal, lookAheadPtDist, name):
 
 	return {'lin_x': lin_x, 'ang_z': ang_z}
 
+
 def fixFinalHeading(state, goal, name):
 	# Compute difference in desired and current heading.  Cast to [-PI,PI].
 	del_heading = goal.theta - state.theta
@@ -117,24 +115,45 @@ def fixFinalHeading(state, goal, name):
 	lin_x = 0;
 	return ({'lin_x': lin_x, 'ang_z': ang_z}, is_goal_reached)
 
-def getCmdVel(state, goal, name, isPreviousNearGoal):
+
+def check_distance_between_point_line(point_p0, line_p1, line_p2):
+	x = [point_p0[0], line_p1[0], line_p2[0]]
+	y = [point_p0[1], line_p1[1], line_p2[1]]
+	distance  = abs((y[2]-y[1])*x[0]-(x[2]-x[1])*y[0]+x[2]*y[1]-y[2]*x[1])/\
+				math.sqrt((y[2]-y[1])**2+(x[2]-x[1])**2)
+	return distance
+
+
+def check_nearest_linear_goal_index(state, goal_list):
+	for ii in range(len(goal_list)-1,0,-1)):
+		if ii == 0:
+			return 0
+		all_goal_before = goal_list[0:ii]
+		curr_goal = goal_list[ii]
+		is_points_in_range = []
+		for each_goal_before in all_goal_before:
+			is_points_in_range.append(
+				check_distance_between_point_line(each_goal_before, state, curr_goal)<config.maxAcceptDistAwayGoal)
+		if not False in is_points_in_range:
+			return ii
+
+
+def getCmdVel(state, goal_list, name, trans_vel, rot_vel, isPreviousNearGoal):
 	# isPreviousNearGoal is an input from Haoyu's code.  It is assigned based on the return value of nearGoalPt below.
 	# and lets us know if the Zumy had previously gotten close to the goal (so we are in an orientation fixing state).
 	# is_goal_reached is an output flag that lets the client know that the Zumy has reached the goal.
-
-
-        
-
-	del_x_world = goal.x - state.x
-	del_y_world = goal.y - state.y
+	nearest_goal = goal_list[check_nearest_linear_goal_index(state, goal_list)]
+	del_x_world = nearest_goal.x - state.x
+	del_y_world = nearest_goal.y - state.y
 
 	# Go to intermediate point if we are far from the goal and haven't yet previously reached the goal.
 	# Addition of (not isPreviousNearGoal) is to prevent instability by forcing the Zumy to only fix orientation
 	# once it has gotten close to the goal for the first time.
 
-        cmd_vel = goToIntermediatePoint(state,goal, config.lookAheadPtDist, name)
-        is_goal_reached = False # We have not reached the goal yet.
-        nearGoalPt = False # Let the client know we haven't yet gotten close to the goal.
+	cmd_vel = goToIntermediatePoint(state,nearest_goal, config.lookAheadPtDist, name)
+	is_goal_reached = False # We have not reached the goal yet.
+	nearGoalPt = False # Let the client know we haven't yet gotten close to the goal.
+
 
 	# if(e_dist(del_x_world, del_y_world) > config.distThresh and (not isPreviousNearGoal)):
 	# 	cmd_vel = goToIntermediatePoint(state,goal, config.lookAheadPtDist, name)

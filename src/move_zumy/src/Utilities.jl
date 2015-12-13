@@ -63,13 +63,12 @@ function path_d2c(xs, ys, v_desired, n_horizon, td, current_x, current_y)
         n = (n_horizon + 1) - length(xs_interpolated)
         xs = xs_interpolated
         ys = ys_interpolated
-        # append!(xs, ones(n) * xs_interpolated[end])
-        # append!(ys, ones(n) * ys_interpolated[end])
+        append!(xs, ones(n) * xs_interpolated[end])
+        append!(ys, ones(n) * ys_interpolated[end])
     else
         xs = xs_interpolated[1:n_horizon+1]
         ys = ys_interpolated[1:n_horizon+1]
     end
-
 
     psi = [atan2(y_i_next - y_i, x_i_next - x_i) for (x_i_next, x_i, y_i_next, y_i) in zip(xs[2:end], xs,
                                                                                            ys[2:end], ys)]

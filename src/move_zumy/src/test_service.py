@@ -26,6 +26,7 @@ if __name__== '__main__':
     pose_goal = Pose2D(0.05, 0.53, 0)
 
     zumy1 = Pose2D(0.47, 0.48, 0.0) # Obstacle
+    # zumy1 = Pose2D(0.05, 0.05, 0.0) # Obstacle
 
     rospy.init_node('test_service_node')
     

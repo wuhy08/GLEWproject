@@ -1,9 +1,7 @@
 float64 x0
 float64 y0
 float64 theta0
-float64 goal_x
-float64 goal_y
-float64 goal_theta
+geometry_msgs/Pose2D[] path
 ---
 float64 v_tr
 float64 v_rt

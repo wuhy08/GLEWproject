@@ -33,7 +33,7 @@ zumy_width = 4;
 zumy_height = 4;
 
 td = 4.0;
-n_horizon = 350;
+n_horizon = 8;
 v_desired = 2.0;
 
 normalized_to_cm = 120;
@@ -84,21 +84,32 @@ function astar_cb(req::AStarSolverRequest)
                             td, start_point.y*square_dimension + square_dimension/2, 
                             start_point.x*square_dimension + square_dimension/2); # Need to flip x and y!
         println("res_cont length: $(length(res_cont))");
-        # println(x_p);
+        println("x_p $(length(x_p))");
+        println("y_p $(length(y_p))");
         # println(y_p);
 
         path = Pose2D[];
 
         # println(Pose2D(3.0, 4.0, 0.0));
-        
-        for (x, y) in zip(x_p, y_p)
-            push!(path, Pose2D(y/(num_tiles*tile_size), x/(num_tiles*tile_size), 0.0)); # Flip x and y!
+
+        psi = [atan2(x_i_next - x_i, y_i_next - y_i) for (x_i_next, x_i, y_i_next, y_i) in zip(x_p[2:end], x_p,
+    	                                                                                       y_p[2:end], y_p)]
+
+        push!(psi, psi[length(psi)-1])
+
+	println("psi: $(psi)")
+	println("psi length: $(length(psi))")
+
+        for (x, y, i) in zip(x_p, y_p, range(1, length(psi)))
+        # for (x, y) in zip(x_p, y_p)
+            push!(path, Pose2D(y/(num_tiles*tile_size), x/(num_tiles*tile_size), psi[i])); # Flip x and y!
+            # push!(path, Pose2D(y/(num_tiles*tile_size), x/(num_tiles*tile_size), 0.0)); # Flip x and y!
         end
 
         response = AStarSolverResponse();
         response.path = path;
 
-        # println(path);
+        println("path: $(path)");
 
         return response;
 

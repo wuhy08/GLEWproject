@@ -55,8 +55,8 @@ find_package(catkin REQUIRED COMPONENTS
  add_service_files(
    FILES
    Mov2LocSrv.srv
-   MPCSolver.srv
    AStarSolver.srv
+   MPCSolver.srv
  )
 
 ## Generate actions in the 'action' folder
