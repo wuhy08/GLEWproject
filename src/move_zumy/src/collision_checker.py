@@ -68,6 +68,16 @@ class Vector2D:
 		self.point1 = point2d_1
 		self.point2 = point2d_2
 
+	def isEqualVect(self, other):
+		# I will consider a vector to be equivalent if it has the same endpoints.
+		# The direction may be opposite - this will be allowed.
+		
+		spt1_check = self.point1.isEqualPt(other.point1) or self.point1.isEqualPt(other.point2)
+		spt2_check = self.point2.isEqualPt(other.point1) or self.point2.isEqualPt(other.point2)
+
+		return (spt1_check and spt2_check)
+				
+
 	# Provides 2 normal vectors to this Vector2D
 	# The length of these normal vector is scaled to satisfy the desired_norm
 	# Both normal vectors start at the origin to allow easier vector addition in client functions
@@ -191,6 +201,21 @@ class Rectangle2D:
 		self.side2 = v2
 		self.side3 = v3
 		self.side4 = v4
+
+	def isEqualRect(self, other):
+		# I will consider a rectangle the same if it has the same four endpoints.  The vectors for both
+		# may be added in a different order; this is not an issue as long as the four endpoints are the same.
+
+		check_side1 = (self.side1.isEqualVect(other.side1) or self.side1.isEqualVect(other.side2) or \
+					  self.side1.isEqualVect(other.side3) or self.side1.isEqualVect(other.side4))
+		check_side2 = (self.side2.isEqualVect(other.side1) or self.side2.isEqualVect(other.side2) or \
+					  self.side2.isEqualVect(other.side3) or self.side2.isEqualVect(other.side4))
+		check_side3 = (self.side3.isEqualVect(other.side1) or self.side3.isEqualVect(other.side2) or \
+					  self.side3.isEqualVect(other.side3) or self.side3.isEqualVect(other.side4))
+		check_side4 = (self.side4.isEqualVect(other.side1) or self.side4.isEqualVect(other.side2) or \
+					  self.side4.isEqualVect(other.side3) or self.side4.isEqualVect(other.side4))
+
+		return (check_side1 and check_side2 and check_side3 and check_side4)
 
 	def isRectIntersection(self, other):
 		# Idea is if any of the sides of the rectangle intersect a side of the other rectangle, then there should be some overlap.
@@ -373,26 +398,59 @@ def command_n_zumys(zumy_vect_dict, zumy_prior_list, dist_thresh):
 # Class to hold robot position data (essentially the same as Pose2D).
 # Theta is in radians.
 class Zumy_Pose:
-	def __init__(self, x, y, theta):
+	def __init__(self, x, y, thetad):
 		self.x = float(x)
 		self.y = float(y)
-		self.theta = float(theta)
+		self.thetad = float(thetad)
+		self.thetar = self.thetad * math.pi/180.0
 		# theta should be in radians, maybe can add a check for this when used.
 
-def check_zumy_static_collision(zumy_pose_list, infl_robot_radius):
+def check_zumy_static_collision(zumy_pose_list, infl_robot_radius, lin_buffer_dist):
 	zumy_BBox_List = []
+	zumy_Permission_List = []
 	for rbt in zumy_pose_list:
 		if not isinstance(rbt, Zumy_Pose):
 			print "Error: First input should be a list of Zumy_Pose classes"
 			raise TypeError
-		# Construct a unit vector to encode robot's position and heading.
-		path_vector = Vector2D(Point2D(rbt.x, rbt.y), Point2D(rbt.x+math.cos(rbt.theta), rbt.y+math.sin(rbt.theta)))
-		# Add this robot's bounding box.  This robot is treated as a static obstacle, so set moving parameter to False.
-		zumy_BBox_List.append(getBoundingBox(path_vector, infl_robot_radius, False))
-	print "Here"
+		
+		if(lin_buffer_dist > 0.0):
+			# Construct path vector with some delta in front and delta in back for the bounding box.
+			pv_endx = rbt.x+lin_buffer_dist*math.cos(rbt.thetar)
+			pv_endy = rbt.y+lin_buffer_dist*math.sin(rbt.thetar)
+			pv_stx = rbt.x-lin_buffer_dist*math.cos(rbt.thetar)
+			pv_sty = rbt.y-lin_buffer_dist*math.sin(rbt.thetar)
+		else:
+			# Construct a unit vector to encode robot's position and heading.  Bounding box just circumscribes
+			# robot's current position.
+			pv_endx = rbt.x+math.cos(rbt.thetar)
+			pv_endy = rbt.y+math.sin(rbt.thetar)
+			pv_stx = rbt.x
+			pv_sty = rbt.y
+			
+		
+		path_vector = Vector2D(Point2D(pv_stx, pv_sty), Point2D(pv_endx, pv_endy))
+
+		if(lin_buffer_dist > 0.0):
+			# Enclose entire path vector.
+			zumy_BBox_List.append(getBoundingBox(path_vector, infl_robot_radius, True))
+		else:			
+			# Only enclose robot's current position with a square.
+			zumy_BBox_List.append(getBoundingBox(path_vector, infl_robot_radius, False))
+
 	for rbt_i in range(0, len(zumy_BBox_List)):
-		for rbt_j in range(rbt_i+1, len(zumy_BBox_List)):
+		isCollision = False
+		#loopCount = 0
+		for rbt_j in range(0, len(zumy_BBox_List)):
+			if (zumy_BBox_List[rbt_i].isEqualRect(zumy_BBox_List[rbt_j])):
+				print_debug("match")
+				print_debug(rbt_i)
+				print_debug(rbt_j)
+				print_debug("match_end")
+				continue
 			# Iterate through every unique pairing of robots in the list.
-			if zumy_BBox_List[rbt_i].isRectIntersection(zumy_BBox_List[rbt_j]):
-				return (zumy_BBox_List, True)
-	return (zumy_BBox_List, False)
+			if (zumy_BBox_List[rbt_i].isRectIntersection(zumy_BBox_List[rbt_j])):
+				isCollision = True
+			#loopCount = loopCount + 1
+		zumy_Permission_List.append(isCollision)
+		#print_debug(loopCount)		
+	return (zumy_BBox_List, zumy_Permission_List)
