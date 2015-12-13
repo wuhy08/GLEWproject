@@ -16,9 +16,6 @@ import matplotlib.pyplot as plt
 
 import goal_formation
 
-infl_radius = 0.05
-lin_buffer_dist = 0.017
-
 class ZumyPosMonitor:
 	def __init__(self, zumy_name, ar_tag_num):
 		self.name = zumy_name
@@ -67,71 +64,6 @@ def translate_cmd_2_coord(formation_string, n):
 				[0.5, 0.9, 90]]) # Edited by Vijay on 12-6 from [0.5, 0.8, 90] to [0.5, 1.1, 90]
 	return coord[0:n]
 
-
-# class CollisionHandler():
-# 	def __init__(self, zumy_ID_list, ar_tag_nums_list):
-# 		self.zumy_ID = zumy_ID_list
-# 		self.zumy_monitor = {}
-# 		self.zumy_spd_pub = {}
-# 		self.collision_result = {}
-# 		self.rate = rospy.Rate(40)
-# 		for curr_zumy_ID in self.zumy_ID:
-# 			self.zumy_monitor[curr_zumy_ID] = ZumyPosMonitor(curr_zumy_ID, ar_tag_nums_list[i])
-# 			self.zumy_spd_pub[curr_zumy_ID] = rospy.Publisher('/%s/cmd_vel' % curr_zumy_ID, Twist, queue_size=2)
-# 			self.collision_result[curr_zumy_ID] = False
-
-# 	def check_collision(self):
-# 		zumy_pose_list = []
-# 		for curr_zumy_ID in self.zumy_ID:
-# 			zumy_pose_list.append(cc.Zumy_Pose(self.zumy_monitor[curr_zumy_ID].position.x,
-# 													self.zumy_monitor[curr_zumy_ID].position.y,
-# 													self.zumy_monitor[curr_zumy_ID].position.theta))
-# 		isCollision = cc.check_zumy_static_collision(zumy_pose_list, infl_radius, lin_buffer_dist)
-# 		ii = 0
-# 		for curr_zumy_ID in self.zumy_ID:
-# 			self.collision_result[curr_zumy_ID] = collision_result_list[ii]
-# 			ii = ii + 1
-
-# 	def handle(self):
-# 		zero_twist = Twist()
-# 		for curr_zumy_ID in self.zumy_ID:
-# 			self.zumy_spd_pub[curr_zumy_ID].publish(zero_twist)
-# 		self.rate.sleep()
-# 		for curr_zumy_ID in self.zumy_ID:
-
-
-
-
-def collision_handler():
-	pass
-
-
-def check_zumy_collision(zumy_ID, zumy_monitor):
-
-	collision_dict = dict()
-	zumy_pose_list = []
-
-	for curr_zumy_ID in zumy_ID:
-		# latest_zumy_pos_cc[curr_zumy_ID] = cc.Point2D(zumy_monitor[curr_zumy_ID].position.x,
-		# 								zumy_monitor[curr_zumy_ID].position.y)
-		# goal_pos_for_cc[curr_zumy_ID] = cc.Point2D(goal_pos_for_srv[curr_zumy_ID].x,
-		# 									goal_pos_for_srv[curr_zumy_ID].y)
-		# zumy_vector_cc[curr_zumy_ID] = cc.Vector2D(latest_zumy_pos_cc[curr_zumy_ID], 
-		# 											goal_pos_for_cc[curr_zumy_ID])
-		zumy_pose_list.append(cc.Zumy_Pose(zumy_monitor[curr_zumy_ID].position.x,
-										zumy_monitor[curr_zumy_ID].position.y,
-										zumy_monitor[curr_zumy_ID].position.theta))
-
-
-	for zumy in zumy_ID:
-		zumy_pose = cc.Zumy_Pose(zumy_monitor[zumy].position.x, zumy_monitor[zumy].position.y,
-								zumy_monitor[zumy].position.theta)
-
-		collision_dict[zumy] = cc.check_zumy_static_collision(zumy_pose, zumy_pose_list, infl_radius, lin_buffer_dist)
-
-	return collision_dict
-
-
 if __name__== '__main__':
 	DEBUG_PLOT = False
 	if DEBUG_PLOT:
@@ -141,7 +73,7 @@ if __name__== '__main__':
 	is_in_form = True
 	is_goal_reached = True
 	myargv = rospy.myargv()
-
+	infl_radius = 0.05
 
 
 	if not len(myargv) in [3,5,7,9]:
@@ -190,21 +122,18 @@ if __name__== '__main__':
 				goal_pos_for_srv[curr_zumy_ID].y = new_final_destination[ii,1]
 				goal_pos_for_srv[curr_zumy_ID].theta = new_final_destination[ii,2]
 				ii = ii + 1
-
 			while final_dest_counter<1:
 				zumy_reach_num = 0
-				zumy_pose_list = []
-
-				zumy_collision_dict = check_zumy_collision(zumy_ID, zumy_monitor)
-
-				#permission_result = cc.command_n_zumys(zumy_vector_cc, zumy_ID, infl_radius)
-					# collision_result = cc.check_zumy_static_collision(curr_zumy_ID, zumy_pose_list, infl_radius, lin_buffer_dist)
-
-				# if True in collision_result:
-				# 	collision_handler()
-
-				#for curr_zumy_ID in zumy_ID:
-				#	zumy_move_premission[curr_zumy_ID] = permission_result[1][curr_zumy_ID]
+				for curr_zumy_ID in zumy_ID:
+					latest_zumy_pos_cc[curr_zumy_ID] = cc.Point2D(zumy_monitor[curr_zumy_ID].position.x,
+													zumy_monitor[curr_zumy_ID].position.y)
+					goal_pos_for_cc[curr_zumy_ID] = cc.Point2D(goal_pos_for_srv[curr_zumy_ID].x,
+														goal_pos_for_srv[curr_zumy_ID].y)
+					zumy_vector_cc[curr_zumy_ID] = cc.Vector2D(latest_zumy_pos_cc[curr_zumy_ID], 
+																goal_pos_for_cc[curr_zumy_ID])
+				permission_result = cc.command_n_zumys(zumy_vector_cc, zumy_ID, infl_radius)
+				for curr_zumy_ID in zumy_ID:
+					zumy_move_premission[curr_zumy_ID] = permission_result[1][curr_zumy_ID]
 				# cct.plot_bounding_boxes(permission_result[0].values(), 
 				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[0]], goal_pos_for_cc[zumy_ID[0]]), 
 				# 	cc.Vector2D(latest_zumy_pos_cc[zumy_ID[1]], goal_pos_for_cc[zumy_ID[1]]),  
@@ -214,19 +143,11 @@ if __name__== '__main__':
 				# cct.plot_bounding_boxes(permission_result[0].values(), 
 				# 	zumy_vector_cc.values(),
 				# 	infl_radius)
-
 				for curr_zumy_ID in zumy_ID:
-
-					if zumy_collision_dict[curr_zumy_ID]:
-						# handle collision
-						pass
-					else:
-						# Do A*
-						#move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
-						is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID], 'formation')
-						if is_goal_reached:
-							zumy_reach_num = zumy_reach_num + 1
-
+					move_permission_pub[curr_zumy_ID].publish(zumy_move_premission[curr_zumy_ID])
+					is_goal_reached = send_loc_req_stat(curr_zumy_ID, goal_pos_for_srv[curr_zumy_ID], 'formation')
+					if is_goal_reached:
+						zumy_reach_num = zumy_reach_num + 1
 				print zumy_reach_num
 				if zumy_reach_num == zumy_numbers:
 					final_dest_counter = final_dest_counter + 1
@@ -269,14 +190,6 @@ if __name__== '__main__':
 						final_dest_counter = final_dest_counter + 1
 					if not zumy_reach_num == zumy_numbers:
 						final_dest_counter = 0
-
-
-
-
-
-			
-
-
 		else:
 			print("Error! Please only input predefined command.")
 

@@ -115,7 +115,6 @@ def fixFinalHeading(state, goal, name):
 	lin_x = 0;
 	return ({'lin_x': lin_x, 'ang_z': ang_z}, is_goal_reached)
 
-
 def getCmdVel(state, goal, name, isPreviousNearGoal):
 	# isPreviousNearGoal is an input from Haoyu's code.  It is assigned based on the return value of nearGoalPt below.
 	# and lets us know if the Zumy had previously gotten close to the goal (so we are in an orientation fixing state).
