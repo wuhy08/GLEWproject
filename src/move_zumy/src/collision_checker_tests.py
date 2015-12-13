@@ -191,6 +191,7 @@ def rect_intersection_check(ra, rb):
 	print ""
 	if(run_plot > 0):
 		plot_vectors((ra.side1, ra.side2, ra.side3, ra.side4, rb.side1, rb.side2, rb.side3, rb.side4))
+		time.sleep(1)
 	
 def bounding_box_check(start_x, start_y, end_x, end_y, robot_radius, isMoving, run_plot):
 	path_vector = cc.Vector2D(cc.Point2D(start_x, start_y), cc.Point2D(end_x, end_y))
@@ -238,40 +239,40 @@ if __name__=='__main__':
 #	vector_intersect_check(((1,1),(1,2)), ((2,2),(2,1)), run_plot)
 
 	# Rectangle Check
-#	va1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,1))
-#	va2 = cc.Vector2D(cc.Point2D(0,1), cc.Point2D(1,1))
-#	va3 = cc.Vector2D(cc.Point2D(1,1), cc.Point2D(1,0))
-#	va4 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(0,0))
-#	ra = rect_check(va1,va2,va3,va4, run_plot) # RA = square
+	#va1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,1))
+	#va2 = cc.Vector2D(cc.Point2D(0,1), cc.Point2D(1,1))
+	#va3 = cc.Vector2D(cc.Point2D(1,1), cc.Point2D(1,0))
+	#va4 = cc.Vector2D(cc.Point2D(1,0), cc.Point2D(0,0))
+	#ra = rect_check(va1,va2,va3,va4, run_plot) # RA = square
 
-#	vb1 = cc.Vector2D(cc.Point2D(-1,0.25), cc.Point2D(3,0.25))
-#	vb2 = cc.Vector2D(cc.Point2D(3,0.25), cc.Point2D(3,0.75))
-#	vb3 = cc.Vector2D(cc.Point2D(3,0.75), cc.Point2D(-1,0.75))
-#	vb4 = cc.Vector2D(cc.Point2D(-1,0.75), cc.Point2D(-1,0.25))
-#	rb = rect_check(vb1, vb2, vb3, vb4, run_plot) # RB = thin horizontal rectangle
+	#vb1 = cc.Vector2D(cc.Point2D(-1,0.25), cc.Point2D(3,0.25))
+	#vb2 = cc.Vector2D(cc.Point2D(3,0.25), cc.Point2D(3,0.75))
+	#vb3 = cc.Vector2D(cc.Point2D(3,0.75), cc.Point2D(-1,0.75))
+	#vb4 = cc.Vector2D(cc.Point2D(-1,0.75), cc.Point2D(-1,0.25))
+	#rb = rect_check(vb1, vb2, vb3, vb4, run_plot) # RB = thin horizontal rectangle
 
-#	vc1 = cc.Vector2D(cc.Point2D(0.3,-0.3), cc.Point2D(1.3,0.7))
-#	vc2 = cc.Vector2D(cc.Point2D(1.3,0.7), cc.Point2D(1.05,0.95))
-#	vc3 = cc.Vector2D(cc.Point2D(1.05,0.95), cc.Point2D(0.05,-0.05))
-#	vc4 = cc.Vector2D(cc.Point2D(0.05,-0.05), cc.Point2D(0.3,-0.3))
-#	rc = rect_check(vc1, vc2, vc3, vc4, run_plot) # RC = slanted rectangle
+	#vc1 = cc.Vector2D(cc.Point2D(0.3,-0.3), cc.Point2D(1.3,0.7))
+	#vc2 = cc.Vector2D(cc.Point2D(1.3,0.7), cc.Point2D(1.05,0.95))
+	#vc3 = cc.Vector2D(cc.Point2D(1.05,0.95), cc.Point2D(0.05,-0.05))
+	#vc4 = cc.Vector2D(cc.Point2D(0.05,-0.05), cc.Point2D(0.3,-0.3))
+	#rc = rect_check(vc1, vc2, vc3, vc4, run_plot) # RC = slanted rectangle
 
-#	vd1 = copy.deepcopy(va1)
-#	vd2 = copy.deepcopy(va2)
-#	vd3 = copy.deepcopy(va3)
-#	vd4 = copy.deepcopy(va4)
-#	for v in (vd1, vd2, vd3, vd4):
-#		v.point1.x = v.point1.x + 1.3
-#		v.point1.y = v.point1.y + 0.7
-#		v.point2.x = v.point2.x + 1.3
-#		v.point2.y = v.point2.y + 0.7
-#	rd = rect_check(vd1, vd2, vd3, vd4, run_plot) # RD = square at corner of RC
+	#vd1 = copy.deepcopy(va1)
+	#vd2 = copy.deepcopy(va2)
+	#vd3 = copy.deepcopy(va3)
+	#vd4 = copy.deepcopy(va4)
+	#for v in (vd1, vd2, vd3, vd4):
+	#	v.point1.x = v.point1.x + 1.3
+	#	v.point1.y = v.point1.y + 0.7
+	#	v.point2.x = v.point2.x + 1.3
+	#	v.point2.y = v.point2.y + 0.7
+	#rd = rect_check(vd1, vd2, vd3, vd4, run_plot) # RD = square at corner of RC
 
 	#R2D Intersection Check: Look at every pair of rectangles that are not the same and look for intersection.
-#	for r1 in (ra, rb, rc, rd):
-#		for r2 in (ra, rb, rc, rd):
-#			if not (r1 == r2):
-#				rect_intersection_check(r1,r2)
+	#for r1 in (ra, rb, rc, rd):
+	#	for r2 in (ra, rb, rc, rd):
+	#		if not (r1 == r2):
+	#			rect_intersection_check(r1,r2)
 
 #	bb1 = bounding_box_check(0, 0, 1, 1, 0.125, True, run_plot)
 #	bb2 = bounding_box_check(0, 0, 1, 1, 0.125, False, run_plot)
@@ -329,12 +330,12 @@ if __name__=='__main__':
 	#	plot_n_bounding_boxes(command_tuple[0].values(), [v1,v2,v3,v4], 0.125)
 	#	time.sleep(1)
 
-	z1 = cc.Zumy_Pose(v1.point1.x, v1.point1.y, math.pi/4.0)
-	z2 = cc.Zumy_Pose(v2.point1.x, v2.point1.y, math.pi/2.0)
-	z3 = cc.Zumy_Pose(v3.point1.x, v3.point1.y, math.pi/2.0)
-	theta4 = math.atan2(v4.point2.y-v4.point1.y, v4.point2.x-v4.point1.x)
-	z4 = cc.Zumy_Pose(v4.point1.x, v4.point1.y, theta4)
-	collision_res = cc.check_zumy_static_collision([z1, z2, z3, z4], 0.125)
+	z1 = cc.Zumy_Pose(v1.point1.x, v1.point1.y, 45)
+	z2 = cc.Zumy_Pose(v2.point1.x, v2.point1.y, 90)
+	z3 = cc.Zumy_Pose(v3.point1.x, v3.point1.y, 90)
+	theta4d = math.atan2(v4.point2.y-v4.point1.y, v4.point2.x-v4.point1.x)*180.0/math.pi
+	z4 = cc.Zumy_Pose(v4.point1.x, v4.point1.y, theta4d)
+	collision_res = cc.check_zumy_static_collision([z1, z2, z3, z4], 0.125, 0.5)
 	print collision_res[1]
 	if(run_plot > 0):
 		vector_list = [cc.Vector2D(cc.Point2D(z1.x, z1.y),cc.Point2D(z1.x, z1.y)), cc.Vector2D(cc.Point2D(z2.x, z2.y),cc.Point2D(z2.x, z2.y)),\
@@ -342,6 +343,18 @@ if __name__=='__main__':
 		plot_n_bounding_boxes(collision_res[0], vector_list, 0.125)
 		time.sleep(5)
 
+	z1 = cc.Zumy_Pose(v1.point1.x, v1.point1.y, 45)
+	z2 = cc.Zumy_Pose(v1.point1.x+0.06, v1.point1.y+0.01, 90)
+	z3 = cc.Zumy_Pose(v3.point1.x, v3.point1.y, 90)
+	theta4d = math.atan2(v4.point2.y-v4.point1.y, v4.point2.x-v4.point1.x)*180.0/math.pi
+	z4 = cc.Zumy_Pose(v4.point1.x, v4.point1.y, theta4d)
+	collision_res = cc.check_zumy_static_collision([z1, z2, z3, z4], 0.125, 0.5)
+	print collision_res[1]
+	if(run_plot > 0):
+		vector_list = [cc.Vector2D(cc.Point2D(z1.x, z1.y),cc.Point2D(z1.x, z1.y)), cc.Vector2D(cc.Point2D(z2.x, z2.y),cc.Point2D(z2.x, z2.y)),\
+					   cc.Vector2D(cc.Point2D(z3.x, z3.y),cc.Point2D(z3.x, z3.y)), cc.Vector2D(cc.Point2D(z4.x, z4.y), cc.Point2D(z4.x, z4.y))]
+		plot_n_bounding_boxes(collision_res[0], vector_list, 0.125)
+		time.sleep(5)
 
 #   Failing rectangle case (can uncomment if you like)
 	#v1 = cc.Vector2D(cc.Point2D(0,0), cc.Point2D(0,2))

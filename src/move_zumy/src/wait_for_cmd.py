@@ -5,7 +5,7 @@ import math
 from ar_coord.msg import ZumyCoord
 from geometry_msgs.msg import Twist,Transform,TransformStamped
 from tf2_msgs.msg import TFMessage
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Float32
 from move_zumy.srv import Mov2LocSrv, Mov2LocSrvResponse
 import get_vel
 import get_vel_2 
@@ -22,12 +22,16 @@ class MoveZumy:
 		rospy.init_node('move_zumy'+zumy_name)
 		self.name = zumy_name
 		self.position = ZumyCoord().position
+		self.trans_vel = 0.0
+		self.rot_vel = 0.0
 		self.prevPosition = ZumyCoord().position
 		self.posUnkown = True
 		self.ARTag = 'ar_marker_'+ ar_tag_num
 		#Will subscribe to corresponding AR tag postion 
 		#and once get new message, call getPos to update position
 		rospy.Subscriber('/'+self.ARTag+'/AR_position', ZumyCoord, self.getPos)
+		rospy.Subscriber('/'+self.name+'/trans_vel', Float32, self.getTransVel)
+		rospy.Subscriber('/'+self.name+'/rot_vel', Float32, self.getRotVel)
 		self.rate = rospy.Rate(40)
 		self.goal = self.position
 		self.goal_flag = True
@@ -49,6 +53,12 @@ class MoveZumy:
 	#updatePermission will be called to update moveEnable whenever a new message is received from the topic
 	def updatePermission(self, msg):
 		self.moveEnable = msg.data
+
+	def getTransVel(self, msg):
+		self.trans_vel = msg.data
+
+	def getRotVel(self, msg):
+		self.rot_vel = msg.data
 
 	# Just keep running the node
 	def run(self):
