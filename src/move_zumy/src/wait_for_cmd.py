@@ -13,6 +13,9 @@ import get_vel_3 as gv
 
 import velocity_formation
 
+from move_zumy.srv import AStarSolver
+from geometry_msgs.msg import Pose2D
+
 #Creat class MoveZumy, all the publishing, subscribing and Service will happen here
 class MoveZumy:
 	def __init__(self, zumy_name, ar_tag_num):
@@ -40,6 +43,7 @@ class MoveZumy:
 		self.vel_pub = rospy.Publisher('/%s/cmd_vel' % self.name, Twist, queue_size=2)
 		#The service will receive position request from clients
 		rospy.Service('/'+self.name+'/zumy_tracking', Mov2LocSrv, self.move)
+                self.astar = rospy.ServiceProxy('astar_solver', AStarSolver, persistent=True)
 		print self.name+' is alive'
 
 	#updatePermission will be called to update moveEnable whenever a new message is received from the topic
@@ -101,12 +105,23 @@ class MoveZumy:
 		cmd.angular.x = 0
 		cmd.angular.y = 0
 
+                obstacle1 = Pose2D(30.0, 2.0, 0.0)
+
 		#Creating a new current state based on the information from Haoyu's code		
 		#Plugging the information from Haoyu's code into Vijay's getCmdVel function to calculate v_x and omega_z
 		#while self.goalCounter<5:
 		if request.Type == 'formation':
+                        # start_point = 
+                        # goal_point = Pose2D(self.goal.x, self.goal.y, self.goal.theta)
+                        
+                        intermediate_goal = self.astar([obstacle1], self.position, self.goal)
+
 			(vel, self.goal_flag, self.historyNearGoal) = \
-				gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
+				# gv.getCmdVel(self.position, self.goal, self.name, self.historyNearGoal)
+				gv.getCmdVel(self.position, intermediate_goal, self.name, self.historyNearGoal)
+
+
+                        
 		if request.Type == 'unison':
 			position_unison = {'x':self.position.x,
 								'y':self.position.y,
